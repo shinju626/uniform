@@ -1,0 +1,91 @@
+<!--商品変更-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>商品変更</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<div>
+		<!--ブラウザ全体-->
+		<div id="wrap">
+
+			<!--ヘッダー部分-->
+			<header th:insert="~{/common/header :: frag}"></header>
+
+			<!--メニュー部分-->
+			<div id="menu">
+				<div class="container">
+					<!--ナビゲーション-->
+					<div id="nav">
+						<ul>
+							<li><a href="/menu">[メニュー]</a></li>
+						</ul>
+					</div>
+
+					<!--ページタイトル-->
+					<div id="page title">
+						<h2>商品変更</h2>
+					</div>
+				</div>
+			</div>
+
+			<!--商品変更のコンテンツ部分-->
+			<div id="main" class="container">
+				<!--入力フォーム-->
+				<form action="/changeItem" method="POST" th:object="${item}">
+					<table class="input-table" align="center">
+						<tr>
+							<th></th>
+							<th>
+								<<変更前情報>>
+							</th>
+							<th>
+								<<変更後情報>>
+							</th>
+						</tr>
+						<tr>
+							<th>画像</th>
+							<td><img src="img/img1.png" alt="商品画像" style="width: 100%;height: 200px;object-fit: cover;">
+							</td>
+							<td><input type="text" name="itemphoto" th:value="*{itemphoto}" th:errorclass="error-msg">
+							</td>
+							<td th:text="${item.itemid}"></td>
+						</tr>
+						<tr>
+							<th>商品名</th>
+							<td th:text="${old_item.itemname}"></td>
+							<td><input type="text" name="itemname" th:value="*{itemname}" th:errorclass="error-msg">
+							</td>
+							<p th:if="${#fields.hasErrors('itemname')}" th:errors="*{title}" class="error-msg"></p>
+						</tr>
+						<tr>
+							<th>価格</th>
+							<td th:text="${old_item.price}"></td>
+							<td><input type="text" name="price" th:errorclass="error-msg"></td>
+							<p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error-msg"></p>
+						</tr>
+						<tr>
+							<th>在庫数</th>
+							<td th:text="${old_item.stock}"></td>
+							<td><input type="text" name="stock" th:errorclass="error-msg"></td>
+							<p th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" class="error-msg"></p>
+						</tr>
+					</table>
+
+					<!--変更完了ボタン-->
+					<input type="hidden" name="itemid" th:value="${old_item.itemid}">
+					<input type="submit" value="変更完了">
+				</form>
+			</div>
+			<!--フッター部分-->
+			<footer th:insert="~{ /common/footer :: frag}"></footer>
+
+		</div>
+	</div>
+</body>
+
+</html>

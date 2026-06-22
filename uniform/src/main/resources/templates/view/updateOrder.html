@@ -1,0 +1,102 @@
+<!--受注状況更新画面-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>注文状況更新</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<!-- ブラウザ全体 -->
+	<div id="wrap">
+
+		<!--ヘッダー部分  -->
+		<header th:insert="~{common/header :: header}"></header>
+
+		<!-- メニュー部分 -->
+		<div id="menu">
+			<div class="container">
+				<!-- ナビゲーション  -->
+				<div id="nav">
+					<ul>
+						<li><a href="/menu">【メニュー】</a></li>
+					</ul>
+				</div>
+
+				<!-- ページタイトル -->
+				<div id="page_title">
+					<h2>注文状況更新</h2>
+				</div>
+			</div>
+		</div>
+
+		<!-- 商品詳細情報のコンテンツ部分 -->
+		<div id="main" class="container">
+
+			<form action="/updateOrder" method="POST" th:object="${order}">
+				<!-- テーブル -->
+				<table class="itemlist-table" align="center">
+					<tr>
+						<td colspan="2"><img th:src="@{/image/}+${order.item.itemphoto}" alt="商品画像" class="detail-item">
+						</td>
+					</tr>
+					<tr>
+						<th>商品名</th>
+						<td th:text="${order.item.itemname}"></td>
+					</tr>
+					<tr>
+						<th>購入数数</th>
+						<td th:text="${order.quantity} + '枚'"></td>
+					</tr>
+					<tr>
+						<th>合計金額</th>
+						<td th:text="'&yen; ' +${#numbers.formatInteger(order.total, 3, 'COMMA')}"></td>
+					</tr>
+					<tr>
+						<th>購入者</th>
+						<td th:text="${order.user.name} + ' 様'"></td>
+					</tr>
+					<tr>
+						<th>備考</th>
+						<td th:text="${order.description}"></td>
+					</tr>
+					<tr>
+						<th>入金状況</th>
+						<td th:if="${order.ispaid==0}">入金待ち</td>
+						<td th:if="${order.ispaid==2}">入金済</td>
+						<td>
+							入金状況
+							<select name="ispaid" th:errorclass="error-msg">
+								<option value=""></option>
+								<option value="0">入金待ち</option>
+								<option value="2">入金済</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>発送状況</th>
+						<td th:if="${order.isshipped==0}">未</td>
+						<td th:if="${order.isshipped==1}">発送準備中</td>
+						<td th:if="${order.isshipped==2}">発送済</td>
+						<td>
+							発送状況
+							<select name="isshipped" th:errorclass="error-msg">
+								<option value=""></option>
+								<option value="0">未</option>
+								<option value="1">発送準備中</option>
+								<option value="2">発送済</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+				<input type="hidden" th:value="${order.orderid}" name="orderid">
+				<input type="submit" value="更新">
+			</form>
+		</div>
+</body>
+<!-- フッター部分 -->
+<footer th:insert="~{common/footer :: footer}"></footer>
+
+</html>

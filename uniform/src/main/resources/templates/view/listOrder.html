@@ -1,0 +1,90 @@
+<!--受注状況一覧-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>受注状況一覧</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+	<!-- ブラウザ全体 -->
+	<div id="wrap">
+
+		<!--ヘッダー部分  -->
+		<header th:insert="~{common/header :: header}"></header>
+
+		<!-- メニュー部分 -->
+		<div id="menu">
+			<div class="container">
+				<!-- ナビゲーション  -->
+				<div id="nav">
+					<ul>
+						<li><a href="/menu">【メニュー】</a></li>
+					</ul>
+				</div>
+
+				<!-- ページタイトル -->
+				<div id="page_title">
+					<h2>受注状況一覧</h2>
+				</div>
+			</div>
+		</div>
+
+
+
+		<!-- 売上情報（今月・先月） -->
+		<p>
+			今月の売り上げ（発送完了分）：¥<span th:text="${thisMonthSales}"></span><br>
+			先月の売り上げ（発送完了分）：¥<span th:text="${lastMonthSales}"></span>
+		</p>
+
+		<!-- 受注状況一覧テーブル -->
+		<h3>受注状況一覧</h3>
+		<table>
+			<thead>
+				<tr>
+					<th>No</th>
+					<th>氏名</th>
+					<th>商品名</th>
+					<th>発注日</th>
+					<th>入金状況</th>
+					<th>発送/更新</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="order : ${orderList}">
+					<td th:text="${order.orderid}"></td>
+					<td th:text="${order.user.name}"></td>
+					<td th:text="${order.item.itemname}"></td>
+					<td th:text="*{#dates.format(order.date, 'yyyy/MM/dd HH:mm:ss')}"></td>
+
+					<!-- 入金状況 -->
+					<td>
+						<span th:if="${order.ispaid == 0}">入金待ち</span>
+						<span th:if="${order.ispaid == 2}">入金済</span>
+					</td>
+
+					<!-- 発送状況 -->
+					<td>
+						<span th:if="${order.isshipped == 0}">未発送</span>
+						<span th:if="${order.isshipped == 1}">発送準備中</span>
+						<span th:if="${order.isshipped == 2}">発送済</span>
+					</td>
+
+<!--					<td>-->
+<!--						<a th:href="@{'/orderDetail/' + ${order.orderId}}">詳細</a> /-->
+<!--						<a th:href="@{'/orderEdit/' + ${order.orderId}}">更新</a>-->
+<!--					</td>-->
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+</body>
+<!-- フッター部分 -->
+<footer th:insert="~{common/footer :: footer}"></footer>
+
+</html>

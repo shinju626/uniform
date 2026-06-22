@@ -1,0 +1,85 @@
+<!--商品登録-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>商品登録</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+
+<body>
+	<!--ブラウザ全体-->
+	<div id="wrap">
+
+		<!--ヘッダー部分-->
+		<header th:insert="~{/common/header :: frag}"></header>
+
+
+		<!--メニュー部分-->
+		<div id="menu">
+			<div class="container">
+				<!--ナビゲーション-->
+				<div id="nav">
+					<ul>
+						<li><a href="/menu">[メニュー]</a></li>
+					</ul>
+				</div>
+
+				<!--ページタイトル-->
+				<div id="page title">
+					<h2>商品登録</h2>
+				</div>
+			</div>
+		</div>
+
+		<!--商品登録コンテンツ部分-->
+		<div id="main" class="container">
+			<!--エラーメッセージ-->
+			<p class="error-msg" th:if="${message}!=null" th:text="${message}"></p>
+			<!--入力フォーム-->
+			<form action="/insertItem" method="POST" th:object="${item}">
+				<table class="input-table" align="center">
+					<tr>
+						<th>商品画像</th>
+						<td>
+							<input type="text" name="itemphoto" th:value="*{itemphoto}" th:errorclass="error-msg">
+							<p th:if="${#fields.hasErrors('itemphoto')}" th:errors="*{itemphoto}"
+								th:errorclass="error-msg"></p>
+						</td>
+					</tr>
+					<tr>
+						<th>商品名</th>
+						<td>
+							<input type="text" name="itemname" th:value="*{itemname}" th:errorclass="error-msg">
+							<p th:if="${#fields.hasErrors('itemname')}" th:errors="*{itemname}"
+								th:errorclass="error-msg"></p>
+						</td>
+					</tr>
+					<tr>
+						<th>価格</th>
+						<td>
+							<input type="text" name="price" th:errorclass="error-msg">
+							<p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" th:errorclass="error-msg"></p>
+						</td>
+					</tr>
+					<tr>
+						<th>在庫数</th>
+						<td>
+							<input type="text" name="stock" th:errorclass="error-msg">
+							<p th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" th:errorclass="error-msg"></p>
+						</td>
+					</tr>
+				</table>
+				<input type="submit" value="登録">
+			</form>
+		</div>
+
+		<!--フッター部分-->
+		<footer th:insert="~{ /common/footer :: frag}"></footer>
+
+	</div>
+</body>
+
+</html>

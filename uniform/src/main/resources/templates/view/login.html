@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>ログイン画面</title>
+		<link rel="stylesheet" th:href="@{/css/style.css}">
+	</head>
+<body>
+    <!-- ブラウザ全体 -->
+    <div id="wrap">
+    
+        <!-- ヘッダー部分 -->
+        <div th:insert="~{/common/header :: frag}"></div>
+        
+        <!-- メニュー部分 -->
+        <div id="menu">
+            <div class="container">
+                
+                <!-- ページタイトル -->
+                <div id="page_title">
+                    <h2>ユニフォーム販売管理システム</h2>
+                </div>
+            </div>
+        </div>
+        
+        <!-- メインコンテンツ部分 -->
+        <div id="main" class="container">
+        
+            <!-- エラーメッセージ -->
+            <p class="error-msg" th:if="${message} != null" th:text="${message}"></p>
+
+            <!-- ログインフォーム-->
+            <form action="/login" method="POST">
+                <table class="input-table" align="center">
+                    <tr>
+                        <th>メールアドレス</th>
+                        <td>
+                            <input type="text" name="email" th:value="${email}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>PASSWORD</th>
+                        <td>
+                            <input type="password" name="password" th:value="${password}">
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- ログインボタン -->
+                <div style="text-align:center; margin-top:20px;">
+                    <input type="submit" value="ログイン">
+                </div>
+            </form>
+
+            <!-- 非会員の方はこちら -->
+            <div style="text-align:center; margin-top:25px;">
+                <form action="/menuNormal" method="GET">
+                    <input type="submit" value="非会員の方はこちら">
+                </form>
+            </div>
+
+            <!-- 会員登録の方はこちら -->
+            <div style="text-align:center; margin-top:15px;">
+                <form action="/register" method="GET">
+                    <input type="submit" value="会員登録の方はこちら">
+                </form>
+            </div>
+
+        </div>
+        
+		<!-- フッター部分 -->
+		<footer th:insert="~{common/footer :: footer}"></footer>
+        
+    </div>
+</body>
+</html>
