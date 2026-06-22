@@ -1,10 +1,64 @@
+<!--商品一覧画面-->
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 
+<head>
+	<meta charset="UTF-8">
+	<title>商品一覧</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<!-- ブラウザ全体 -->
+	<div id="nomal">
+
+		<!-- ヘッダー部分 -->
+		<header th:insert="~{common/header :: header}"></header>
+
+		<!-- メニュー部分 -->
+		<div id="menu">
+			<div class="container">
+				<!-- ナビゲーション -->
+				<div id="nav">
+					<ul>
+						<li><a href="/menu">【メニュー】</a></li>
+					</ul>
+				</div>
+
+				<!-- ページタイトル -->
+				<div id="page_title">
+					<h2>商品一覧</h2>
+				</div>
+			</div>
+		</div>
+
+		<!-- ユーザー一覧のコンテンツ部分 -->
+		<div id="main" class="container">
+
+			<!-- 商品リスト -->
+			<table class="itemlist-table" align="center">
+				<thead>
+					<tr>
+						<th style="width:150px">商品名</th>
+						<th style="width:150px">価格</th>
+						<th style="width:150px">在庫数</th>
+						<th style="width:150px">画像</th>
+					</tr>
+				</thead>
+				<tbody th:if="${item_list.size() >= 1}">
+					<tr th:each="item : ${item_list}">
+						<td><a th:href="@{/detailItem(itemid=${item.itemid})}" th:text="${item.itemname}"></a></td>
+						<td th:text="${item.price}"></td>
+						<td th:text="${item.stock}"></td>
+						<td><img th:src="@{/image/}+${item.itemphoto}" alt="商品画像" class="img-item"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- フッター部分 -->
+		<footer th:insert="~{common/footer :: footer}"></footer>
+	</div>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 package jp.co.f1.spring.bms.controller;
 
+import java.util.Date;
 import java.util.Optional;
 
 import jakarta.annotation.PostConstruct;
@@ -12,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import jp.co.f1.spring.bms.dao.OrderDao;
 import jp.co.f1.spring.bms.entity.User;
+import jp.co.f1.spring.bms.entity.Item;
 import jp.co.f1.spring.bms.entity.Order;
 import jp.co.f1.spring.bms.repository.ItemRepository;
 import jp.co.f1.spring.bms.repository.OrderRepository;
+import jp.co.f1.spring.bms.repository.UserRepository;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +33,9 @@ public class OrderController {
 	private ItemRepository iteminfo;
 	@Autowired
 	private OrderRepository orderinfo;
+
+	@Autowired
+	private UserRepository userinfo;
 
 	// EntityManager自動インスタンス化
 	@PersistenceContext
@@ -178,20 +185,196 @@ public class OrderController {
 		return mav;
 
 	}
-	
+
 	@GetMapping("/listOrder")
-	public ModelAndView listOrder(ModelAndView mav) {
+	public ModelAndView listOrder(ModelAndView mav, Order order) {
 
-	    // DBから全件取得
-	    Iterable<Order> allOrders = orderinfo.findAll();
+		// DBから全件取得
+		Iterable<Order> allOrders = orderDao.sort(order.getDate());
 
-	    // HTML に渡す
-	    mav.addObject("orderList", allOrders);
+		// HTML に渡す
+		mav.addObject("orderList", allOrders);
 
-	    // 表示する画面
-	    mav.setViewName("view/listOrder");
+		// 表示する画面
+		mav.setViewName("view/listOrder");
 
-	    return mav;
+		return mav;
+	}
+
+	/**
+	 * 「/orderHistory」へGET送信された場合
+	 * @param mav
+	 * @return 注文履歴
+	 */
+	@GetMapping("/orderHistory")
+	public ModelAndView orderHistory(ModelAndView mav) {
+		//セッションからユーザー情報取得
+		User user = (User) session.getAttribute("user");
+		//セッション切れの場合
+		if (user == null) {//エラーメッセージ
+			mav.addObject("errorMessage", "セッション切れの為、");
+			mav.addObject("cmd", "logout");
+			mav.addObject("next", "[ログイン画面へ]");// 画面に出力するViewを指定
+			mav.setViewName("view/error");// ModelとView情報を返す
+			return mav;
+		}
+
+		// UserRepositoryのメソッドを使用し、ユーザーの情報を全件取得する
+		Iterable<Order> order_list = orderinfo.findByUserid(user.getUserid());
+
+		mav.addObject("order_list", order_list);
+		//画面に出力するViewを指定
+		mav.setViewName("view/orderHistory");
+		//ModelとView情報を返す
+		return mav;
+	}
+
+	/**
+	 * 「buyItem」へアクセスがあった場合
+	 * @param request
+	 * @param mav
+	 * @return 購入画面(会員)を表示
+	 */
+	@GetMapping("/buyItem")
+	public ModelAndView buyItem(HttpServletRequest request, ModelAndView mav) {
+		//セッションからユーザー情報取得
+		User user = (User) session.getAttribute("user");
+		//セッション切れの場合
+		if (user == null) {
+			//エラーメッセージ
+			mav.addObject("errorMessage", "セッション切れの為、詳細を表示できません。");
+			mav.addObject("cmd", "logout");
+			mav.addObject("next", "[ログイン画面へ]");
+			// 画面に出力するViewを指定
+			mav.setViewName("view/error");
+			// ModelとView情報を返す
+			return mav;
+
+		}
+		//Viewに渡す変数をModelに格納
+		mav.addObject("user", user);
+
+		//パラメータで取得した値を基に商品を検索
+		Optional<Item> optionalItem = iteminfo.findByItemid(Integer.parseInt(request.getParameter("itemid")));
+
+		Order order = new Order();
+		order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
+		mav.addObject("order", order);
+
+		//一覧画面のリンクをクリック時、表示対象の商品が存在しない
+		if (!(optionalItem.isPresent())) {
+			//エラーメッセージ
+			mav.addObject("errorMessage", "詳細対象の商品が存在しない為、詳細情報処理は行えません。");
+			mav.addObject("cmd", "itemList");
+			mav.addObject("next", "[商品一覧画面へ]");
+			// 画面に出力するViewを指定
+			mav.setViewName("view/error");
+			// ModelとView情報を返す
+			return mav;
+
+		}
+
+		//Viewに渡す変数をModelに格納
+		mav.addObject("item", optionalItem.get());
+
+		//画面に出力するViewを指定
+		mav.setViewName("view/buyItem");
+
+		// ModelとView情報を返す
+		return mav;
+	}
+
+	/**
+	 * 「buyConfirm」へアクセスがあった場合
+	 * @param request
+	 * @param mav
+	 * @return 購入後画面を表示
+	 */
+	@GetMapping("/buyConfirm")
+	public ModelAndView buyConfirm(HttpServletRequest request, ModelAndView mav) {
+		if (request.getParameter("authority").equals("3")) {
+			User newUser = new User();
+			newUser.setPassword("非会員");
+			newUser.setEmail(request.getParameter("email"));
+			newUser.setName(request.getParameter("name"));
+			newUser.setAddress(request.getParameter("address"));
+			newUser.setAuthority(3);
+			userinfo.saveAndFlush(newUser);
+
+			mav.addObject("user", newUser);
+
+			Optional<Item> optionalItem = iteminfo.findByItemid(Integer.parseInt(request.getParameter("itemid")));
+			Item item = optionalItem.get();
+
+			Order order = new Order();
+			Date date = new Date();
+			order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
+			order.setUserid(newUser.getUserid());
+			order.setItemid(Integer.parseInt(request.getParameter("itemid")));
+			order.setDescription(request.getParameter("description"));
+			order.setIspaid(0);
+			order.setIsshipped(0);
+			order.setDate(date);
+			int total = Integer.parseInt(request.getParameter("quantity")) * item.getPrice();
+			order.setTotal(total);
+			orderinfo.saveAndFlush(order);
+
+			mav.addObject("order", order);
+
+			mav.addObject("total", total);
+
+			// 画面に出力するViewを指定
+			mav.setViewName("view/buyConfirm");
+
+			// ModelとView情報を返す
+			return mav;
+
+		} else {
+			//セッションからUserの値を取得する
+			User user = (User) session.getAttribute("user");
+
+			//セッション切れの場合
+			if (user == null) {
+				//エラーメッセージ
+				mav.addObject("errorMessage", "セッション切れの為、購入は出来ません。");
+				mav.addObject("cmd", "logout");
+				mav.addObject("next", "[ログイン画面へ]");
+				// 画面に出力するViewを指定
+				mav.setViewName("view/error");
+				// ModelとView情報を返す
+				return mav;
+			}
+			mav.addObject("user", user);
+
+			Optional<Item> optionalItem = iteminfo.findByItemid(Integer.parseInt(request.getParameter("itemid")));
+			Item item = optionalItem.get();
+
+			Order order = new Order();
+			Date date = new Date();
+			order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
+			order.setUserid(user.getUserid());
+			order.setItemid(Integer.parseInt(request.getParameter("itemid")));
+			order.setDescription(request.getParameter("description"));
+			order.setIspaid(0);
+			order.setIsshipped(0);
+			order.setDate(date);
+			int total = Integer.parseInt(request.getParameter("quantity")) * item.getPrice();
+			order.setTotal(total);
+			orderinfo.saveAndFlush(order);
+
+			mav.addObject("order", order);
+
+			mav.addObject("item", item);
+
+			mav.addObject("total", total);
+
+			// 画面に出力するViewを指定
+			mav.setViewName("view/buyConfirm");
+
+			// ModelとView情報を返す
+			return mav;
+
+		}
 	}
 
 	/**

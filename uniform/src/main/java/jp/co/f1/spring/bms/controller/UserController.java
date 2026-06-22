@@ -407,6 +407,221 @@ public class UserController {
 	}
 
 	/**
+	 * 「/changeInfo」へGET送信があった場合
+	 * @param mav
+	 * @return 会員情報を修正を表示
+	 */
+
+	@GetMapping("/changeInfo")
+	public ModelAndView changeInfo(HttpServletRequest request, ModelAndView mav) {
+
+		//セッションからUserの値を取得する
+		CheckUser checkUser = (CheckUser) session.getAttribute("checkUser");
+
+		//★重要！！！！！！！！！！
+		//userにしかuseridがないから、checkUserにuserのuseridをいれる
+		User user = (User) session.getAttribute("user");
+		mav.addObject("user", user);
+
+		//Viewに渡す変数をModelに格納
+		mav.addObject("checkUser", checkUser);
+
+		//画面に出力するViewを指定
+		mav.setViewName("view/changeInfo");
+
+		//ModelとView情報を返す
+		return mav;
+
+	}
+
+	/**
+	 * 「/changeInfo」へPOST送信があった場合
+	 * @param mav
+	 * @return 会員情報を修正を表示
+	 * 	 */
+
+	@PostMapping(value = "/changeInfo")
+	public ModelAndView changeInfoPost(@ModelAttribute @Validated CheckUser checkuser, BindingResult result,
+			ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+
+		//セッションからUserの値を取得する
+		User user = (User) session.getAttribute("user");
+
+		//セッション切れ
+		if (user == null) {
+			mav.addObject("errorMessage", "セッション切れの為、再度ログインしてください。");
+			mav.addObject("cmd", "logout");
+			mav.addObject("next", "[ログイン画面へ]");
+			mav.setViewName("view/error");
+			return mav;
+		}
+
+		//バリデーションエラー
+		if (result.hasErrors()) {
+			mav.addObject("errorMessage", "入力内容に誤りがあります。");
+			mav.addObject("user", user);
+			mav.setViewName("view/changeUserinfo");
+			return mav;
+		}
+
+		//旧パスと現在パスのチェック
+		Optional<User> optionalUser = userinfo.findByEmailAndPassword(user.getEmail(), checkuser.getOldPassword());
+
+		if (optionalUser.isEmpty()) {
+			mav.addObject("message", "現在のパスワードが間違っています。");
+			mav.setViewName("view/changeUserinfo");
+			return mav;
+		}
+
+		// 名前の更新チェック（無ければ前の値をキープ）
+		if (checkuser.getName() != null && !checkuser.getName().isBlank()) {
+			user.setName(checkuser.getName());
+		}
+
+		// メアドの更新チェック（無ければ前の値をキープ）
+		if (checkuser.getEmail() != null && !checkuser.getEmail().isBlank()) {
+			user.setEmail(checkuser.getEmail());
+		}
+
+		// 住所の更新チェック（無ければ前の値をキープ）
+		if (checkuser.getAddress() != null && !checkuser.getAddress().isBlank()) {
+			user.setAddress(checkuser.getAddress());
+		}
+
+		//新しいパスワードと確認用のパスワードが一致するかを確認
+		if (!checkuser.getPassword().equals(checkuser.getConfirmPassword())) {
+			mav.addObject("message", "確認用パスワードが一致しません");
+			mav.setViewName("view/changeUserinfo");
+			return mav;
+		}
+
+		//空白じゃない場合のみ登録を行う
+		if (checkuser.getPassword() != null && !checkuser.getPassword().isBlank()) {
+			// // 新パスワードと確認用パスワードの一致チェック
+			if (!checkuser.getPassword().equals(checkuser.getConfirmPassword())) {
+				mav.addObject("message", "確認用パスワードが一致しません。");
+				mav.setViewName("view/changeUserinfo");
+				return mav;
+			}
+			// 一致していれば新しいパスワードをセット
+			user.setPassword(checkuser.getPassword());
+		}
+
+		//格納したUserの値に新規パスワードを設定し、DBにも登録する
+		//★重要↓
+		user.setPassword(checkuser.getPassword());
+		userinfo.saveAndFlush(user);
+
+		//クッキーを再登録する
+		//Cookieの設定
+		Cookie useridCookie = new Cookie("strUserid", checkuser.getEmail());
+		useridCookie.setMaxAge(60 * 60 * 24 * 5); //5日間に設定E
+		response.addCookie(useridCookie);
+
+		Cookie passCookie = new Cookie("strPassword", checkuser.getPassword());
+		passCookie.setMaxAge(60 * 60 * 24 * 5);//5日間に設定
+		response.addCookie(passCookie);
+
+		//User、CheckUserをセッションに登録する
+		session.setAttribute("user", user);
+		session.setAttribute("checkUser", checkuser);
+
+		//Viewに渡す変数をModelに格納
+		mav.addObject("message", "会員情報の変更が完了しました！");
+
+		//Viewに渡す変数をModelに格納
+		mav.addObject("checkUser", checkuser);
+		mav.addObject("user", user);
+
+		//画面に出力するViewを指定
+		mav.setViewName("view/changeInfo");
+
+		//ModelとView情報を返す
+		return mav;
+	}
+
+	/**
+	 * 「/signup」へGET送信された場合
+	 * @param mav
+	 * @return
+	 */
+	@GetMapping("/signup")
+	public ModelAndView signup(@ModelAttribute CheckUser checkUser, ModelAndView mav) {
+
+		// Viewに渡す変数をModelに格納
+		mav.addObject("checkUser", checkUser);
+
+		// 画面に出力するViewを指定
+		mav.setViewName("view/signup");
+
+		// ModelとView情報を返す
+		return mav;
+	}
+
+	/**
+	 * 「/signup」へPOST送信された場合
+	 * @param checkUser
+	 * @param result
+	 * @param mav
+	 * @return 入力されたデータをDBに登録して、メッセージを表示
+	 */
+	@PostMapping(value = "/signup")
+	public ModelAndView insertUserPost(@ModelAttribute @Validated CheckUser checkUser,
+			BindingResult result, ModelAndView mav) {
+
+		// ユーザーを検索し、エラーがないか確認する
+		Optional<User> optionalUser = userinfo.findByEmailAndPassword(checkUser.getEmail(), checkUser.getPassword());
+
+		// エラーチェック
+		// 同じユーザーIDの情報がないか確認
+		if (optionalUser.isPresent()) {
+			mav.addObject("errorMessage", "入力されたメールアドレスは既に使用済みの為、登録できません。");
+			mav.setViewName("view/signup");
+			return mav;
+		}
+
+		// フォームから受け取ったパスワードと確認用パスワードが一致しているか確認
+		if (!checkUser.getPassword().equals(checkUser.getConfirmPassword())) {
+			mav.addObject("errorMessage", "新パスワードと確認パスワードが合っていません");
+			mav.setViewName("view/signup");
+			return mav;
+		}
+
+		// 全データの空白チェック
+		if (result.hasErrors()) {
+
+			// 新パスワードはValidation対象ではないため、別途エラー処理
+			if (checkUser.getPassword() == "") {
+				mav.addObject("passwordError", "パスワードを入力してください");
+			}
+
+			// それ以外
+			mav.addObject("errorMessage", "入力内容に誤りがあります");
+			mav.setViewName("view/signup");
+			return mav;
+		}
+
+		// 確認用のクラスからUserへ格納し、DBに登録
+		User newUser = new User();
+		newUser.setPassword(checkUser.getPassword());
+		newUser.setEmail(checkUser.getEmail());
+		newUser.setName(checkUser.getName());
+		newUser.setAddress(checkUser.getAddress());
+		newUser.setAuthority(2);
+		userinfo.saveAndFlush(newUser);
+
+		// Viewに渡す変数をModelに格納
+		mav.addObject("message", "ユーザー登録完了しました！");
+
+		// 画面に出力するViewを指定
+		mav.setViewName("view/signup");
+
+		// ModelとView情報を返す
+		return mav;
+
+	}
+
+	/**
 	 * エラーが発生した場合
 	 * @param e
 	 * @return エラー画面とエラーメッセージを表示する

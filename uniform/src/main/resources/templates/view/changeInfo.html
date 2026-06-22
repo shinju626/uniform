@@ -1,10 +1,116 @@
+<!--登録情報変更画面(会員用)-->
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<meta charset="UTF-8">
+	<title>登録情報変更</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 
+	<!-- ブラウザ全体 -->
+	<div id="nomal">
+
+		<!-- ヘッダー部分 -->
+		<div th:insert="~{/common/header :: frag}"></div>
+
+
+
+		<!-- メニュー部分 -->
+		<div id="menu">
+
+			<!--		!-- ナビゲーション  -->
+			<div id="nav">
+
+				<ul>
+					<li><a href="/menu">[メニュー]</a></li>
+				</ul>
+
+			</div>
+			<!-- ページタイトル -->
+			<div id="page_title">
+				<h2>登録情報変更</h2>
+			</div>
+		</div>
+
+		<!-- 書籍一覧のコンテンツ部分 -->
+		<form action="/changeUserinfo" method="POST" th:object="${user}">
+
+			<!-- エラーメッセージ -->
+			<p class="error-msg" th:if="${message} != null" th:text="${message}"></p>
+			<div id="main" class="container">
+
+
+				<!-- パスワード変更 -->
+				<div="main" class="container">
+
+					<table style=" width: 50%; ">
+
+						<tr>
+							<th>名前</th>
+							<td th:text="${user.name}"></td>
+							<td>
+								<input type="text" name="name" th:value="${user.name}">
+							</td>
+						</tr>
+						<tr>
+							<th>Eメール</th>
+							<td th:text="${user.email}"></td>
+							<td>
+								<input type="text" name="email" th:value="${email}">
+							</td>
+
+						</tr>
+						<tr>
+							<th>住所</th>
+							<td th:text="${user.address}"></td>
+							<td>
+								<input type="text" name="address" th:value="${address}">
+							</td>
+
+						</tr>
+						<tr>
+							<th>旧パスワード</th>
+							<td></td>
+							<td>
+								<input type="password" name="oldPassword" th:value="${oldPassword}">
+							</td>
+						</tr>
+						<tr>
+							<th>新パスワード</th>
+							<td></td>
+
+							<td>
+								<input type="password" name="password" th:value="${password}">
+							</td>
+
+						</tr>
+						<tr>
+							<th>新パスワード(確認用)</th>
+							<td></td>
+
+							<td>
+								<input type="password" name="confirmPassword" th:value="${confirmPassword}">
+							</td>
+						</tr>
+
+
+						<input type="hidden" name="authority" th:value="${user.authority}">
+
+					</table>
+					<input type="submit" value="登録">
+			</div>
+	</div>
+	</form>
+
+
+	<!-- フッター部分 -->
+	<div th:insert="~{/common/footer :: frag}"></div>
+
 </body>
+
+
+
 </html>

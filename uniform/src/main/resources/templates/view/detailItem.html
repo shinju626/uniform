@@ -1,10 +1,80 @@
+<!--商品詳細画面-->
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 
+
+<head>
+	<meta charset="UTF-8">
+	<title>商品詳細</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+
+<body>
+	<!-- ブラウザ全体 -->
+	<div id="nomal">
+
+		<!--ヘッダー部分  -->
+		<div th:insert="~{/common/header :: frag}"></div>
+
+		<!-- メニュー部分 -->
+		<div id="menu">
+			<div class="container">
+				<!-- ナビゲーション  -->
+				<div id="nav">
+					<ul>
+						<li><a href="/menu">[メニュー]</a></li>
+					</ul>
+				</div>
+
+				<!-- ページタイトル -->
+				<div id="page_title">
+					<h2>商品詳細</h2>
+				</div>
+			</div>
+		</div>
+
+		<!-- 書籍変更コンテンツ部分 -->
+		<div id="main" class="container">
+			<!--エラーメッセ―ジ-->
+			<p class="error-msg" th:if="${message}!=null" th:text="${message}"></p>
+			<table style=" width: 50%; ">
+				<tr>
+					<th>画像</th>
+					<td><img th:src="@{/image/}+${item.itemphoto}" alt="商品画像" class="img-item"></td>
+				</tr>
+				<tr>
+					<th>商品名</th>
+					<td th:text="${item.itemname}"></td>
+				</tr>
+				<tr>
+					<th>価格</th>
+					<td th:text="${item.price}"></td>
+				</tr>
+				<tr>
+					<th>在庫数</th>
+					<td th:text="${item.stock}"></td>
+				</tr>
+
+			</table>
+			<span th:if="${user.authority=='2'}">
+				<form action="/buyItem" method="get" th:object="${item}">
+					<input type="hidden" name="itemid" th:value="${item.itemid}">
+					購入数<input type="text" name="quantity">枚
+					<input type="submit" value="購入">
+				</form>
+			</span>
+
+			<div th:unless="${user.authority == '3'}">
+				<form action="/buyItem" method="get" th:object="${item}">
+					<input type="hidden" name="itemid" th:value="${item.itemid}">
+					購入数<input type="text" name="quantity">枚
+					<input type="submit" value="購入">
+				</form>
+
+			</div>
+		</div>
 </body>
+<footer th:insert="~{common/footer :: footer}"></footer>
+
 </html>

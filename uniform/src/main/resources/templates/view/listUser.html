@@ -61,10 +61,11 @@
 					<td th:text="${user.address}"></td>
 					<td th:if="${user.authority==1}">管理者</td>
 					<td th:if="${user.authority==2}">会員</td>
-					<!--                <td>-->
-					<!--                    <a th:href="@{/userDetail(id=${user.user})}">変更</a>-->
-					<!--                    <a th:href="@{/userDetail(id=${user.user})}">削除</a>-->
-					<!--                </td>-->
+					<td>
+						<a th:href="@{/detailUser(userid=${user.userid})}">変更</a>
+						<a>/</a>
+						<a th:href="@{/deleteUser(userid=${user.userid})}">削除</a>
+					</td>
 				</tr>
 			</tbody>
 		</table>

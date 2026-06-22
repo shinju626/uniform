@@ -1,10 +1,75 @@
+<!--注文履歴画面-->
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 
+<head>
+	<meta charset="UTF-8">
+	<title>注文履歴</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<!-- ブラウザ全体 -->
+	<div id="nomal">
+
+		<!-- ヘッダー部分 -->
+		<header th:insert="~{common/header :: header}"></header>
+
+		<!-- メニュー部分 -->
+		<div id="menu">
+			<div class="container">
+				<!-- ナビゲーション -->
+				<div id="nav">
+					<ul>
+						<li><a href="/menu">【メニュー】</a></li>
+					</ul>
+				</div>
+
+				<!-- ページタイトル -->
+				<div id="page_title">
+					<h2>注文履歴</h2>
+				</div>
+			</div>
+		</div>
+
+		<!-- ユーザー一覧のコンテンツ部分 -->
+		<div id="main" class="container">
+
+			<!-- 商品リスト -->
+			<table class="itemlist-table" align="center">
+				<thead>
+					<tr>
+
+						<th style="width:200px">商品名</th>
+						<th style="width:150px">数量</th>
+						<th style="width:150px">合計金額名</th>
+						<th style="width:150px">注文日</th>
+						<th style="width:150px">入金状況</th>
+						<th style="width:150px">発送状況</th>
+					</tr>
+				</thead>
+				<tbody th:if="${order_list.size() >= 1}">
+					<tr th:each="order : ${order_list}">
+						<td th:text="${order.item.itemname}"></td>
+						<td th:text="${order.quantity}"></td>
+						<td th:text="${order.total}"></td>
+						<td th:text="${order.date}"></td>
+						<td>
+							<a th:if="${order.ispaid == 0}">未入金</a>
+							<a th:if="${order.ispaid == 1}">入金済み</a>
+						</td>
+						<td>
+							<a th:if="${order.isshipped == 0}">未発送</a>
+							<a th:if="${order.isshipped == 1}">発送済み</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- フッター部分 -->
+		<footer th:insert="~{common/footer :: footer}"></footer>
+	</div>
 </body>
+
 </html>

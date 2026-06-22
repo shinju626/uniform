@@ -1,5 +1,7 @@
 package jp.co.f1.spring.bms.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import jakarta.annotation.PostConstruct;
@@ -177,8 +179,9 @@ public class ItemController {
 	 */
 	@PostMapping(value = "/insertItem")
 	//POSTデータをItemインスタンスとして受け取る
-	public ModelAndView insertPost(@ModelAttribute @Validated Item item, BindingResult result,
-			ModelAndView mav) {
+	public ModelAndView insertPost(HttpSession session, @ModelAttribute @Validated Item item,
+			BindingResult result, @RequestParam(name = "realimage") MultipartFile file, HttpServletRequest request,
+			HttpServletResponse response, ModelAndView mav) {
 
 		//セッションからUserの値を取得する
 		User user = (User) session.getAttribute("user");
@@ -195,27 +198,46 @@ public class ItemController {
 		//検索
 		Optional<Item> optionalItem = iteminfo.findByItemid(item.getItemid());
 
-		//重複チェック
-		if (optionalItem.isPresent()) {
-			//エラーメッセージ
-			mav.addObject("message", "入力ISBNは既に登録済みの為、書籍登録処理は行えませんでした。");
-			// 画面に出力するViewを指定
-			mav.setViewName("view/insertItem");
-			// ModelとView情報を返す
+		try {
+			// ファイル名（別名をつけても良い）
+			String filename = file.getOriginalFilename();
+			if (filename.matches(".*(.png|.jpeg|.jpg).*")) {
+				// 保存先パス
+				String filePath = "src/main/resources/static/image/" + filename;
+
+				if (file.getSize() > 2097152) {
+					mav.addObject("message", "アップロード出来るのは2MB未満のファイルのみです");
+					mav.addObject("user", user);
+					mav.setViewName("view/itemInsert");
+					return mav;
+				}
+
+				// ファイルをバイナリデータとして取得
+				byte[] content = file.getBytes();
+				// 保存
+				Files.write(Paths.get(filePath), content);
+				item.setItemphoto(filename);
+			} else if (filename.equals("")) {
+				// 画像が空欄の場合は何もせずに下へ
+			} else {
+				mav.addObject("message", "アップロード出来るのはpngまたはjpeg、jpg形式のみです");
+				mav.addObject("user", user);
+				mav.setViewName("view/itemInsert");
+				return mav;
+			}
+		} catch (Exception e) {
+			// エラー時
+			e.printStackTrace();
+		}
+		// 空欄時
+		if (!(result.hasErrors())) {
+			mav.addObject("message", "入力内容に空欄があります");
+			mav.addObject("user", user);
+			mav.setViewName("view/itemInsert");
 			return mav;
+
 		}
 
-		//入力エラーがある場合
-		if (result.hasErrors()) {
-			//エラーメッセージ
-			mav.addObject("message", "入力内容に誤りがあります");
-
-			//画面に出力するViewを指定
-			mav.setViewName("view/insertItem");
-
-			//ModelとView情報を返す
-			return mav;
-		}
 
 		//入力されたデータをDBに保存
 		iteminfo.saveAndFlush(item);
@@ -228,14 +250,14 @@ public class ItemController {
 	}
 
 	/**
-	 * 「/delete」へアクセスがあった場合
+	 * 「/deleteItem」へアクセスがあった場合
 	 * 対象商品を削除
 	 * @param request
 	 * @param mav
 	 * @return
 	 */
-	@GetMapping("/delete")
-	public ModelAndView delete(HttpServletRequest request, ModelAndView mav) {
+	@GetMapping("/deleteItem")
+	public ModelAndView deleteItem(HttpServletRequest request, ModelAndView mav) {
 
 		// セッションからUserの値を取得する
 		User user = (User) session.getAttribute("user");
@@ -267,6 +289,75 @@ public class ItemController {
 
 		// リダイレクト先を指定
 		mav = new ModelAndView("redirect:/listItem");
+
+		// ModelとView情報を返す
+		return mav;
+	}
+
+	//商品詳細「/detailItem」にアクセスがあった場合
+	@GetMapping("/detailItem")
+	public ModelAndView detail(HttpServletRequest request, ModelAndView mav) {
+
+		//パラメータで取得したitemidを基に、各情報を取得する
+		Optional<Item> optionalItem = iteminfo.findByItemid(Integer.parseInt(request.getParameter("itemid")));
+
+		//データが存在しない（空である）場合
+		if (!(optionalItem.isPresent())) {
+			mav.addObject("errorMessage", "表示対象の商品が存在しない為、詳細情報は表示出来ませんでした。");
+
+			mav.addObject("cmd", "list");
+
+			mav.addObject("next", "[一覧表示へ戻る]");
+
+			mav.setViewName("view/error");
+
+			return mav;
+		}
+
+		//セッションからUserの値を取得する
+		User user = (User) session.getAttribute("user");
+
+		//getメソッドを用いてModelに格納
+		mav.addObject("item", optionalItem.get());
+
+		mav.addObject("user", user);
+
+		//画面に出力するViewを指定
+		mav.setViewName("view/detailItem");
+
+		//ModelとView情報を返す
+		return mav;
+
+	}
+
+	/**
+	 * 「/listItem」へGET送信された場合
+	 * @param mav
+	 * @return 商品一覧
+	 */
+	@GetMapping("/listItem")
+	public ModelAndView listItem(ModelAndView mav) {
+
+		// bookinfoテーブルから全件取得
+		Iterable<Item> item_list = iteminfo.findAll();
+
+		// セッションからUserの値を取得する
+		User user = (User) session.getAttribute("user");
+
+		// セッションタイムアウト
+//		if (user == null) {
+//			mav.addObject("errorMessage", "セッション切れの為、再度ログインしてください。");
+//			mav.addObject("cmd", "login");
+//			mav.addObject("next", "[ログイン画面へ戻る]");
+//			mav.setViewName("view/error");
+//			return mav;
+//		}
+
+		//  Viewに渡す変数をModelに格納
+		mav.addObject("item_list", item_list);
+
+		// 画面に出力するViewを指定
+		mav.setViewName("view/listItem");
 
 		// ModelとView情報を返す
 		return mav;

@@ -1,11 +1,71 @@
 <!--購入内容確認画面-->
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 
+<head>
+	<meta charset="UTF-8">
+	<title>購入画面</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<!-- ブラウザ全体 -->
+	<div id="nomal">
+
+		<!-- ヘッダー部分 -->
+		<header th:insert="~{common/header :: header}"></header>
+
+		<!-- メニュー部分 -->
+		<div id="menu">
+			<div class="container">
+				<!-- ナビゲーション -->
+				<div id="nav">
+					<ul>
+						<li><a href="/menu">【メニュー】</a></li>
+					</ul>
+				</div>
+
+				<!-- ページタイトル -->
+				<div id="page_title">
+					<h2>購入画面</h2>
+				</div>
+			</div>
+		</div>
+
+		<!--会員登録部分 -->
+		<div id="main" class="container">
+			<p class="error-msg" th:if="${errorMessage} != null" th:text="${errorMessage}"></p>
+			<p class="error-msg" th:if="${message} != null" th:text="${message}"></p>
+			<h4>商品のご購入ありがとうございます！<br><br>
+				以下の内容で注文を確定いたしました。<br>
+				メールにて振込先を指定しておりますので、ご確認お願いします。<br>
+				入金の確認ができ次第発送いたします。<br><br>
+				
+			</h4>
+
+				<table>
+					<tr>
+						<th>商品名</th>
+						<th>購入数</th>
+						<th>合計金額</th>
+						<th>備考</th>
+					</tr>
+					<tr>
+						<td th:text="${item.itemname}"></td>
+						<td th:text="${order.quantity}"></td>
+						<td th:text="'&yen;' +${#numbers.formatInteger(order.total, 3, 'COMMA')}"></td>
+						<td th:text="${order.description}"></td>
+					</tr>
+
+				</table>
+
+				<h4>またのご利用をお待ちしております。<br></h4>
+
+		</div>
+
+		<!-- フッター部分 -->
+		<footer th:insert="~{common/footer :: footer}"></footer>
+	</div>
 </body>
+
 </html>

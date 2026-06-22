@@ -1,3 +1,4 @@
+<!--メニュー画面(非会員)-->
 <!DOCTYPE html>
 <html>
 
@@ -9,19 +10,12 @@
 
 <body>
 	<!-- ブラウザ全体 -->
-	<div id="wrap">
+	<div id="nomal">
 
 		<!-- ヘッダー部分 -->
 		<div th:insert="~{/common/header :: frag}"></div>
-		
-<!--非会員メニュー画面-->
-<body>
-	<!-- ブラウザ全体 -->
-	<div id="wrap">
 
-		<!--ヘッダー部分  -->
-		<header th:insert="~{common/header :: header}"></header>
-		<!-- メニュー部分 -->
+		<!--非会員メニュー部分-->
 		<div id="menu">
 			<div class="container">
 				<!-- ページタイトル -->
@@ -33,8 +27,12 @@
 
 		<!-- menuのコンテンツ部分 -->
 		<div id="main" class="container">
-			<a href="/#">[商品一覧]</a><br>
-			<a href="/#">[注文一覧]</a><br>
+			<a href="/listItem">[商品一覧]</a><br>
+			<a href="/signup">[会員登録]</a><br>
+			<br>
+			<br>
+			<br>
+			
 		</div>
 
 		<!-- フッター部分 -->

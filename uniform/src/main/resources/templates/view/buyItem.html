@@ -1,11 +1,83 @@
 <!--購入画面-->
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 
+<head>
+	<meta charset="UTF-8">
+	<title>購入画面</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<!-- ブラウザ全体 -->
+	<div id="nomal">
+
+		<!-- ヘッダー部分 -->
+		<header th:insert="~{common/header :: header}"></header>
+
+		<!-- メニュー部分 -->
+		<div id="menu">
+			<div class="container">
+				<!-- ナビゲーション -->
+				<div id="nav">
+					<ul>
+						<li><a href="/menu">【メニュー】</a></li>
+					</ul>
+				</div>
+
+				<!-- ページタイトル -->
+				<div id="page_title">
+					<h2>購入画面</h2>
+				</div>
+			</div>
+		</div>
+
+		<!--会員登録部分 -->
+		<div id="main" class="container">
+			<p class="error-msg" th:if="${errorMessage} != null" th:text="${errorMessage}"></p>
+			<p class="error-msg" th:if="${message} != null" th:text="${message}"></p>
+			<form action="/buyConfirm" th:object="${user}">
+				<table>
+					<tr>
+						<th>商品</th>
+						<td th:text="${item.itemname}"></td>
+					</tr>
+					<tr>
+						<th>購入数</th>
+						<td th:text="${order.quantity}"></td>
+						<input type="hidden" name="quantity" th:value="${order.quantity}">
+					</tr>
+					<tr>
+						<th>名前</th>
+						<td th:text="${user.name}"></td>
+					</tr>
+					<tr>
+						<th>メールアドレス</th>
+						<td th:text="${user.email}"></td>
+					</tr>
+					<tr>
+						<th>住所</th>
+						<td th:text="${user.address}"></td>
+					</tr>
+					<tr>
+						<th>備考</th>
+						<td>
+							<input type="text" name="description" th:value="${order.description}">
+							<input type="hidden" name="description" th:value="${order.description}">
+							<input type="hidden" name="userid" th:value="${user.userid}">
+							<input type="hidden" name="authority" th:value="${user.authority}">
+						</td>
+					</tr>
+				</table>
+				<input type="hidden" name="itemid" th:value="${item.itemid}">
+				<input type="submit" value="購入確定">
+			</form>
+
+		</div>
+
+		<!-- フッター部分 -->
+		<footer th:insert="~{common/footer :: footer}"></footer>
+	</div>
 </body>
+
 </html>
