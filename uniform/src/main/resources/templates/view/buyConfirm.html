@@ -17,11 +17,9 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-			<!-- ナビゲーション -->
+			<!-- ナビゲーション  -->
 			<div id="nav">
-				<ul>
-					<li><a href="/menu">【メニュー】</a></li>
-				</ul>
+				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
 			</div>
 
 			<!-- ページタイトル -->
@@ -50,7 +48,7 @@
 				</tr>
 				<tr>
 					<td th:text="${item.itemname}"></td>
-					<td th:text="${order.quantity}"></td>
+					<td th:text="${order.quantity} + '枚'"></td>
 					<td th:text="'&yen;' +${#numbers.formatInteger(order.total, 3, 'COMMA')}"></td>
 					<td th:text="${order.description}"></td>
 				</tr>

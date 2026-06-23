@@ -163,7 +163,10 @@ public class ItemController {
 		}
 
 		//Viewに渡す変数をModelに格納
-		iteminfo.saveAndFlush(item);
+		old_item.setItemname(item.getItemname());
+		old_item.setPrice(item.getPrice());
+		old_item.setStock(item.getStock());
+		iteminfo.saveAndFlush(old_item);
 
 		//リダイレクト先を指定
 		mav = new ModelAndView("redirect:/listItem");
@@ -399,12 +402,23 @@ public class ItemController {
 		// セッションからUserの値を取得する
 		User user = (User) session.getAttribute("user");
 
+		// 非会員の場合、メニュー画面のリンクが変わるので必要
+		if (user == null) {
+			User userNormal = new User();
+			userNormal.setAuthority(3);
+			//  Viewに渡す変数をModelに格納
+			mav.addObject("user", userNormal);
+		} else {
+			//  Viewに渡す変数をModelに格納
+			mav.addObject("user", user);
+
+		}
+
 		// bookinfoテーブルから全件取得
 		Iterable<Item> item_list = iteminfo.findAll();
 
 		//  Viewに渡す変数をModelに格納
 		mav.addObject("item_list", item_list);
-		mav.addObject("user", user);
 
 		// 画面に出力するViewを指定
 		mav.setViewName("view/listItem");

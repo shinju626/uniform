@@ -21,9 +21,8 @@
 		<div id="menu">
 			<!-- ナビゲーション  -->
 			<div id="nav">
-				<ul>
-					<li><a href="/menu">[メニュー]</a></li>
-				</ul>
+				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
+				<a class="btn" href="/listItem"><span>商品一覧</span><span>GO</span></a>
 			</div>
 
 			<!-- ページタイトル -->
@@ -55,18 +54,25 @@
 				</tr>
 
 			</table>
-			<div th:unless="${item.stock == 0}">
+			<table>
 				<div th:if="${user.authority==1}">
-
-					<form action="/changeItem" method="get" th:object="${item}">
-						<input type="hidden" name="itemid" th:value="${item.itemid}">
-						<input type="submit" value="変更">
-					</form>
-					<form action="/deleteItem" method="get" th:object="${item}">
-						<input type="hidden" name="itemid" th:value="${item.itemid}">
-						<input type="submit" value="削除">
-					</form>
+					<tr>
+						<td>
+							<form action="/changeItem" method="get" th:object="${item}">
+								<input type="hidden" name="itemid" th:value="${item.itemid}">
+								<input type="submit" value="変更">
+							</form>
+						</td>
+						<td>
+							<form action="/deleteItem" method="get" th:object="${item}">
+								<input type="hidden" name="itemid" th:value="${item.itemid}">
+								<input type="submit" value="削除">
+							</form>
+						</td>
+					</tr>
 				</div>
+			</table>
+			<div th:unless="${item.stock == 0}">
 				<div th:if="${user.authority==2}">
 					<form action="/buyItem" method="get" th:object="${item}">
 						<input type="hidden" name="itemid" th:value="${item.itemid}">

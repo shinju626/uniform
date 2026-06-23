@@ -17,17 +17,16 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-				<!-- ナビゲーション  -->
-				<div id="nav">
-					<ul>
-						<li><a href="/menu">【メニュー】</a></li>
-					</ul>
-				</div>
+			<!-- ナビゲーション  -->
+			<div id="nav">
+				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
+				<a class="btn" href="/listOrder"><span>受注状況一覧</span><span>GO</span></a>
+			</div>
 
-				<!-- ページタイトル -->
-				<div id="page_title">
-					<h2>注文詳細画面</h2>
-				</div>
+			<!-- ページタイトル -->
+			<div id="page_title">
+				<h2>注文詳細画面</h2>
+			</div>
 		</div>
 
 		<!-- 商品詳細情報のコンテンツ部分 -->
@@ -76,7 +75,7 @@
 			<form action="/updateOrder" method="GET" th:object="${order}">
 				<input type="hidden" th:value="${order.orderid}" name="orderid">
 				<input type="submit" value="状況更新">
-			</form>	
+			</form>
 		</div>
 </body>
 <!-- フッター部分 -->

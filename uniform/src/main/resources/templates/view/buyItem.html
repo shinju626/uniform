@@ -17,11 +17,9 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-			<!-- ナビゲーション -->
+			<!-- ナビゲーション  -->
 			<div id="nav">
-				<ul>
-					<li><a href="/menu">【メニュー】</a></li>
-				</ul>
+				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
 			</div>
 
 			<!-- ページタイトル -->
@@ -68,7 +66,7 @@
 					</tr>
 				</table>
 				<input type="hidden" name="itemid" th:value="${item.itemid}">
-				<input type="submit" value="購入確定">
+				<input type="submit" value="購入する" class="button">
 			</form>
 
 		</div>

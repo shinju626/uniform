@@ -21,13 +21,9 @@
 		<!-- メニュー部分 -->
 		<div id="menu">
 
-			<!--		!-- ナビゲーション  -->
+			<!-- ナビゲーション  -->
 			<div id="nav">
-
-				<ul>
-					<li><a href="/menu">[メニュー]</a></li>
-				</ul>
-
+				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
 			</div>
 			<!-- ページタイトル -->
 			<div id="page_title">
@@ -78,9 +74,9 @@
 						<td></td>
 						<td>
 							<input type="password" name="oldPassword" th:value="${oldPassword}">
-<!--							<p th:if="${#fields.hasErrors('oldPassword')}" th:errors="*{oldPassword}"-->
-<!--								th:errorclass="error-msg">-->
-<!--							</p>-->
+							<!--							<p th:if="${#fields.hasErrors('oldPassword')}" th:errors="*{oldPassword}"-->
+							<!--								th:errorclass="error-msg">-->
+							<!--							</p>-->
 						</td>
 					</tr>
 					<tr>
@@ -99,7 +95,7 @@
 
 						<td>
 							<input type="password" name="confirmPassword" th:value="${confirmPassword}">
-<!--							<p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error-msg">-->
+							<!--							<p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error-msg">-->
 							</p>
 						</td>
 					</tr>

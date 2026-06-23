@@ -183,7 +183,7 @@ public class OrderController {
 		if (request.getParameter("ispaid").equals("2")) {
 			String insertMessage = optionalOrder.get().getUser().getName() + "様" + "\n" + "\n" + "商品の代金のご入金が確認できました。"
 					+ "\n"
-					+ "発送まで今しばらくお待ちください。" + "\n" + "ご不明点等ございましたらご連絡ください。" + "\n"+ "\n";
+					+ "発送まで今しばらくお待ちください。" + "\n" + "ご不明点等ございましたらご連絡ください。" + "\n" + "\n";
 
 			insertMessage += "☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆" + "\n"
 					+ "株式会社神田ユニフォーム" + "\n"
@@ -271,58 +271,62 @@ public class OrderController {
 		Iterable<Order> allOrders = orderDao.sort(order.getDate());
 
 		LocalDate today = LocalDate.now();
-		
-//		today.getMonth();
-//		today.getMonthValue();
-		
+
+		//		today.getMonth();
+		//		today.getMonthValue();
+
 		//発送済み
-		ArrayList<Order> ordermonth_now2 = orderDao.findByMonth2(String.valueOf(today.getYear()),String.valueOf(today.getMonthValue()));
-		ArrayList<Order> ordermonth_before2 = orderDao.findByMonth2(String.valueOf(today.getYear()),String.valueOf(today.getMonthValue() -1));
-		
+		ArrayList<Order> ordermonth_now2 = orderDao.findByMonth2(String.valueOf(today.getYear()),
+				String.valueOf(today.getMonthValue()));
+		ArrayList<Order> ordermonth_before2 = orderDao.findByMonth2(String.valueOf(today.getYear()),
+				String.valueOf(today.getMonthValue() - 1));
+
 		int nowTotal2 = 0;
 		int beforeTotal2 = 0;
-		
+
 		//取得した合計の計算をする
 		for (int i = 0; i < ordermonth_now2.size(); i++) {
 			//※ここでOrderの情報を取り出し、金額を取り出せるようにしておく
 			Order order_now2 = ordermonth_now2.get(i);
 			nowTotal2 += order_now2.getTotal();
 		}
-		
+
 		//取得した合計の計算をする
 		for (int i = 0; i < ordermonth_before2.size(); i++) {
 			//※ここでOrderの情報を取り出し、金額を取り出せるようにしておく
 			Order order_before2 = ordermonth_before2.get(i);
 			beforeTotal2 += order_before2.getTotal();
 		}
-		
+
 		mav.addObject("nowTotal2", nowTotal2);
 		mav.addObject("beforeTotal2", beforeTotal2);
-		
+
 		//予定
-		ArrayList<Order> ordermonth_now = orderDao.findByMonth(String.valueOf(today.getYear()),String.valueOf(today.getMonthValue()));
-		ArrayList<Order> ordermonth_before = orderDao.findByMonth(String.valueOf(today.getYear()),String.valueOf(today.getMonthValue() - 1));
-		
+		ArrayList<Order> ordermonth_now = orderDao.findByMonth(String.valueOf(today.getYear()),
+				String.valueOf(today.getMonthValue()));
+		ArrayList<Order> ordermonth_before = orderDao.findByMonth(String.valueOf(today.getYear()),
+				String.valueOf(today.getMonthValue() - 1));
+
 		int nowTotal = 0;
 		int beforeTotal = 0;
-		
+
 		//取得した合計の計算をする
 		for (int i = 0; i < ordermonth_now.size(); i++) {
 			//※ここでOrderの情報を取り出し、金額を取り出せるようにしておく
 			Order order_now = ordermonth_now.get(i);
 			nowTotal += order_now.getTotal();
 		}
-		
+
 		//取得した合計の計算をする
 		for (int i = 0; i < ordermonth_before.size(); i++) {
 			//※ここでOrderの情報を取り出し、金額を取り出せるようにしておく
 			Order order_before = ordermonth_before.get(i);
 			beforeTotal += order_before.getTotal();
 		}
-		
+
 		mav.addObject("nowTotal", nowTotal);
 		mav.addObject("beforeTotal", beforeTotal);
-		
+
 		// HTML に渡す
 		mav.addObject("orderList", allOrders);
 
@@ -621,8 +625,15 @@ public class OrderController {
 		}
 		mav.addObject("user", user); // ユーザーごとの画面の映し分けに必要
 
-		// 書籍の検索
+		// 注文の検索
 		Optional<Order> optionalOrder = orderinfo.findById(Integer.parseInt(request.getParameter("orderid")));
+		Order order = optionalOrder.get();
+		// 商品の検索
+		Optional<Item> optionalItem = iteminfo.findById(order.getItemid());
+		Item item = optionalItem.get();
+
+		item.setStock(item.getStock() + order.getQuantity());
+		iteminfo.saveAndFlush(item);
 
 		// エラーチェック
 		if (!(optionalOrder.isPresent())) {

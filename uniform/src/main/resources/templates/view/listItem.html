@@ -20,13 +20,13 @@
 				<!-- ナビゲーション -->
 				<div id="nav" th:if="${user.authority==1} or ${user.authority==2}">
 					<ul>
-						<li><a href="/menu">【メニュー】</a></li>
+						<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
 					</ul>
 				</div>
 
-				<div id="nav" th:unless="${user.authority==1} or ${user.authority==2}">
+				<div id="nav" th:if="${user.authority==3}">
 					<ul>
-						<li><a href="/menu">【メニュー】</a></li>
+						<a class="btn" href="/menuNormal"><span>MENU</span><span>GO</span></a>
 					</ul>
 				</div>
 

@@ -18,28 +18,26 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-				<!-- ナビゲーション  -->
-				<div id="nav">
-					<ul>
-						<li><a href="/menu">【メニュー】</a></li>
-					</ul>
-				</div>
+			<!-- ナビゲーション  -->
+			<div id="nav">
+				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
+			</div>
 
-				<!-- ページタイトル -->
-				<div id="page_title">
-					<h2>受注状況一覧</h2>
-				</div>
+			<!-- ページタイトル -->
+			<div id="page_title">
+				<h2>受注状況一覧</h2>
+			</div>
 		</div>
 
 
 
 		<!-- 売上情報（今月・先月） -->
-				<p>
-					今月の売り上げ（発送完了分）：<span th:text="'&yen; ' +${#numbers.formatInteger(nowTotal2, 3, 'COMMA')}"></span>
-					　　今月の売り上げ（予定分）：<span th:text="'&yen; ' +${#numbers.formatInteger(nowTotal, 3, 'COMMA')}"></span><br>
-					先月の売り上げ（発送完了分）：<span th:text="'&yen; ' +${#numbers.formatInteger(beforeTotal2, 3, 'COMMA')}"></span>
-					　　先月の売り上げ（予定分）：<span th:text="'&yen; ' +${#numbers.formatInteger(beforeTotal, 3, 'COMMA')}"></span>
-				</p>
+		<p>
+			今月の売り上げ（発送完了分）：<span th:text="'&yen; ' +${#numbers.formatInteger(nowTotal2, 3, 'COMMA')}"></span>
+			　　今月の売り上げ（予定分）：<span th:text="'&yen; ' +${#numbers.formatInteger(nowTotal, 3, 'COMMA')}"></span><br>
+			先月の売り上げ（発送完了分）：<span th:text="'&yen; ' +${#numbers.formatInteger(beforeTotal2, 3, 'COMMA')}"></span>
+			　　先月の売り上げ（予定分）：<span th:text="'&yen; ' +${#numbers.formatInteger(beforeTotal, 3, 'COMMA')}"></span>
+		</p>
 
 		<!-- 受注状況一覧テーブル -->
 		<h3>受注状況一覧</h3>
