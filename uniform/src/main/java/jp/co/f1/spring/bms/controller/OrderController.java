@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.mail.MailSendException;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 
 @Controller
 public class OrderController {
@@ -33,9 +36,10 @@ public class OrderController {
 	private ItemRepository iteminfo;
 	@Autowired
 	private OrderRepository orderinfo;
-
 	@Autowired
 	private UserRepository userinfo;
+	@Autowired
+	private MailSender mailSender;
 
 	// EntityManager自動インスタンス化
 	@PersistenceContext
@@ -78,7 +82,7 @@ public class OrderController {
 		// 書籍情報があるかどうかチェック
 		if (!(optionalOrder.isPresent())) {
 			mav.addObject("errorMessage", "表示対象の受注情報が存在しない為、詳細情報は表示出来ませんでした。");
-			mav.addObject("cmd", "list");
+			mav.addObject("cmd", "listOrder");
 			mav.addObject("next", "[一覧表示へ戻る]");
 			mav.setViewName("view/error");
 			return mav;
@@ -256,6 +260,20 @@ public class OrderController {
 
 		//パラメータで取得した値を基に商品を検索
 		Optional<Item> optionalItem = iteminfo.findByItemid(Integer.parseInt(request.getParameter("itemid")));
+		Item item = optionalItem.get();
+
+		//在庫数を超えるため購入
+		if (Integer.parseInt(request.getParameter("quantity")) > item.getStock()) {
+			//エラーメッセージ
+			mav.addObject("errorMessage", "在庫数を超えるため購入できません。");
+			mav.addObject("cmd", "itemList");
+			mav.addObject("next", "[商品一覧画面へ]");
+			// 画面に出力するViewを指定
+			mav.setViewName("view/error");
+			// ModelとView情報を返す
+			return mav;
+
+		}
 
 		Order order = new Order();
 		order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
@@ -275,7 +293,7 @@ public class OrderController {
 		}
 
 		//Viewに渡す変数をModelに格納
-		mav.addObject("item", optionalItem.get());
+		mav.addObject("item", item);
 
 		//画面に出力するViewを指定
 		mav.setViewName("view/buyItem");
@@ -294,6 +312,20 @@ public class OrderController {
 	public ModelAndView buyNormal(HttpServletRequest request, ModelAndView mav) {
 		//パラメータで取得した値を基に商品を検索
 		Optional<Item> optionalItem = iteminfo.findByItemid(Integer.parseInt(request.getParameter("itemid")));
+		Item item = optionalItem.get();
+
+		//在庫数を超えるため購入
+		if (Integer.parseInt(request.getParameter("quantity")) > item.getStock()) {
+			//エラーメッセージ
+			mav.addObject("errorMessage", "在庫数を超えるため購入できません。");
+			mav.addObject("cmd", "itemList");
+			mav.addObject("next", "[商品一覧画面へ]");
+			// 画面に出力するViewを指定
+			mav.setViewName("view/error");
+			// ModelとView情報を返す
+			return mav;
+
+		}
 
 		Order order = new Order();
 		order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
@@ -313,8 +345,9 @@ public class OrderController {
 		}
 
 		//Viewに渡す変数をModelに格納
-		mav.addObject("item", optionalItem.get());
+		mav.addObject("item", item);
 		User user = new User();
+		user.setAuthority(3);
 		mav.addObject("user", user);
 
 		//画面に出力するViewを指定
@@ -332,46 +365,32 @@ public class OrderController {
 	 */
 	@GetMapping("/buyConfirm")
 	public ModelAndView buyConfirm(HttpServletRequest request, ModelAndView mav) {
-		if (request.getParameter("authority").equals("3")) {
-			User newUser = new User();
-			newUser.setPassword("非会員");
-			newUser.setEmail(request.getParameter("email"));
-			newUser.setName(request.getParameter("name"));
-			newUser.setAddress(request.getParameter("address"));
-			newUser.setAuthority(3);
-			userinfo.saveAndFlush(newUser);
 
-			mav.addObject("user", newUser);
+		// ユーザーとオーダーを新たに宣言
+		User user = new User();
+		Order order = new Order();
 
-			Optional<Item> optionalItem = iteminfo.findByItemid(Integer.parseInt(request.getParameter("itemid")));
-			Item item = optionalItem.get();
+		// itemidを基にアイテムの詳細情報を取得
+		Optional<Item> optionalItem = iteminfo.findByItemid(Integer.parseInt(request.getParameter("itemid")));
+		Item item = optionalItem.get();
 
-			Order order = new Order();
-			Date date = new Date();
-			order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
-			order.setUserid(newUser.getUserid());
-			order.setItemid(Integer.parseInt(request.getParameter("itemid")));
-			order.setDescription(request.getParameter("description"));
-			order.setIspaid(0);
-			order.setIsshipped(0);
-			order.setDate(date);
-			int total = Integer.parseInt(request.getParameter("quantity")) * item.getPrice();
-			order.setTotal(total);
-			orderinfo.saveAndFlush(order);
+		// 購入した分を在庫から減らす
+		item.setStock(item.getStock() - Integer.parseInt(request.getParameter("quantity")));
+		iteminfo.saveAndFlush(item);
 
-			mav.addObject("order", order);
+		if (request.getParameter("authority").equals("3")) { // 非会員の場合
 
-			mav.addObject("total", total);
+			// 入力内容を非会員としてusersに登録
+			user.setPassword("非会員");
+			user.setEmail(request.getParameter("email"));
+			user.setName(request.getParameter("name"));
+			user.setAddress(request.getParameter("address"));
+			user.setAuthority(3);
+			userinfo.saveAndFlush(user);
 
-			// 画面に出力するViewを指定
-			mav.setViewName("view/buyConfirm");
-
-			// ModelとView情報を返す
-			return mav;
-
-		} else {
+		} else { // 会員の場合
 			//セッションからUserの値を取得する
-			User user = (User) session.getAttribute("user");
+			user = (User) session.getAttribute("user");
 
 			//セッション切れの場合
 			if (user == null) {
@@ -384,37 +403,36 @@ public class OrderController {
 				// ModelとView情報を返す
 				return mav;
 			}
-			mav.addObject("user", user);
-
-			Optional<Item> optionalItem = iteminfo.findByItemid(Integer.parseInt(request.getParameter("itemid")));
-			Item item = optionalItem.get();
-
-			Order order = new Order();
-			Date date = new Date();
-			order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
-			order.setUserid(user.getUserid());
-			order.setItemid(Integer.parseInt(request.getParameter("itemid")));
-			order.setDescription(request.getParameter("description"));
-			order.setIspaid(0);
-			order.setIsshipped(0);
-			order.setDate(date);
-			int total = Integer.parseInt(request.getParameter("quantity")) * item.getPrice();
-			order.setTotal(total);
-			orderinfo.saveAndFlush(order);
-
-			mav.addObject("order", order);
-
-			mav.addObject("item", item);
-
-			mav.addObject("total", total);
-
-			// 画面に出力するViewを指定
-			mav.setViewName("view/buyConfirm");
-
-			// ModelとView情報を返す
-			return mav;
 
 		}
+
+		Date date = new Date();
+		order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
+		order.setUserid(user.getUserid());
+		order.setItemid(Integer.parseInt(request.getParameter("itemid")));
+		order.setDescription(request.getParameter("description"));
+		order.setIspaid(0);
+		order.setIsshipped(0);
+		order.setDate(date);
+		int total = Integer.parseInt(request.getParameter("quantity")) * item.getPrice();
+		order.setTotal(total);
+		orderinfo.saveAndFlush(order);
+
+		String insertMessage = user.getName() + "様" + "\n" + "\n" + "ユニフォームのご購入ありがとうございます。" + "\n"
+				+ "以下内容で注文を受け付けましたので、ご連絡いたします。" + "\n";
+
+		insertMessage += order.getItem().getItemname() + order.getQuantity() + "枚";
+
+		mav.addObject("user", user);
+		mav.addObject("order", order);
+		mav.addObject("item", item);
+		mav.addObject("total", total);
+
+		// 画面に出力するViewを指定
+		mav.setViewName("view/buyConfirm");
+
+		// ModelとView情報を返す
+		return mav;
 	}
 
 	/**
