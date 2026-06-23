@@ -17,36 +17,27 @@
 		<header th:insert="~{common/header :: header}"></header>
 
 		<div id="menu">
-			<div class="container">
-				<!-- ナビゲーション  -->
-				<div id="nav">
-					<ul>
-						<li><a href="/menu">【メニュー】</a></li>
-					</ul>
-				</div>
+			<!-- ナビゲーション  -->
+			<div id="nav">
+				<ul>
+					<li><a href="/menu">【メニュー】</a></li>
+				</ul>
+			</div>
 
-				<!-- ページタイトル -->
-				<div id="page_title">
-					<h2>ユーザー一覧</h2>
-				</div>
+			<!-- ページタイトル -->
+			<div id="page_title">
+				<h2>ユーザー一覧</h2>
 			</div>
 		</div>
-		<!-- 検索フォーム-->
-		<form action="/userList" method="get">
-			<label>キーワード検索：
-				<input type="text" name="keyword">
-			</label>
-			<input type="submit" value="検索">
-		</form>
 
+
+		<h3 align="center">管理者</h3>
 		<table border="1">
 			<thead>
 				<tr>
 					<th>ユーザーID</th>
 					<th>氏名</th>
 					<th>メールアドレス</th>
-					<th>住所</th>
-					<th>権限</th>
 					<th>変更/削除</th>
 
 				</tr>
@@ -54,15 +45,41 @@
 
 			<tbody>
 				<!-- DBから渡された userList を1件ずつ表示 -->
-				<tr th:each="user : ${user}">
+				<tr th:each="user : ${user}" th:if="${user.authority==1}">
+					<td th:text="${user.userid}"></td>
+					<td th:text="${user.name}"></td>
+					<td th:text="${user.email}"></td>
+					<td>
+						<a th:href="@{/changeUserinfo(userid=${user.userid})}">変更</a>
+						<a>/</a>
+						<a th:href="@{/deleteUser(userid=${user.userid})}">削除</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h3 align="center">会員</h3>
+		<table border="1">
+			<thead>
+				<tr>
+					<th>ユーザーID</th>
+					<th>氏名</th>
+					<th>メールアドレス</th>
+					<th>住所</th>
+					<th>変更/削除</th>
+
+				</tr>
+			</thead>
+
+			<tbody>
+				<!-- DBから渡された userList を1件ずつ表示 -->
+				<tr th:each="user : ${user}" th:if="${user.authority==2}">
 					<td th:text="${user.userid}"></td>
 					<td th:text="${user.name}"></td>
 					<td th:text="${user.email}"></td>
 					<td th:text="${user.address}"></td>
-					<td th:if="${user.authority==1}">管理者</td>
-					<td th:if="${user.authority==2}">会員</td>
 					<td>
-						<a th:href="@{/detailUser(userid=${user.userid})}">変更</a>
+						<a th:href="@{/changeUserinfo(userid=${user.userid})}">変更</a>
 						<a>/</a>
 						<a th:href="@{/deleteUser(userid=${user.userid})}">削除</a>
 					</td>

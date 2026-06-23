@@ -18,7 +18,6 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-			<div class="container">
 				<!-- ナビゲーション  -->
 				<div id="nav">
 					<ul>
@@ -30,16 +29,17 @@
 				<div id="page_title">
 					<h2>受注状況一覧</h2>
 				</div>
-			</div>
 		</div>
 
 
 
 		<!-- 売上情報（今月・先月） -->
-		<p>
-			今月の売り上げ（発送完了分）：¥<span th:text="${thisMonthSales}"></span><br>
-			先月の売り上げ（発送完了分）：¥<span th:text="${lastMonthSales}"></span>
-		</p>
+				<p>
+					今月の売り上げ（発送完了分）：<span th:text="'&yen; ' +${#numbers.formatInteger(nowTotal2, 3, 'COMMA')}"></span>
+					　　今月の売り上げ（予定分）：<span th:text="'&yen; ' +${#numbers.formatInteger(nowTotal, 3, 'COMMA')}"></span><br>
+					先月の売り上げ（発送完了分）：<span th:text="'&yen; ' +${#numbers.formatInteger(beforeTotal2, 3, 'COMMA')}"></span>
+					　　先月の売り上げ（予定分）：<span th:text="'&yen; ' +${#numbers.formatInteger(beforeTotal, 3, 'COMMA')}"></span>
+				</p>
 
 		<!-- 受注状況一覧テーブル -->
 		<h3>受注状況一覧</h3>

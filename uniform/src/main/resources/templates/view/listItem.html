@@ -17,9 +17,14 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-			<div class="container">
 				<!-- ナビゲーション -->
-				<div id="nav">
+				<div id="nav" th:if="${user.authority==1} or ${user.authority==2}">
+					<ul>
+						<li><a href="/menu">【メニュー】</a></li>
+					</ul>
+				</div>
+
+				<div id="nav" th:unless="${user.authority==1} or ${user.authority==2}">
 					<ul>
 						<li><a href="/menu">【メニュー】</a></li>
 					</ul>
@@ -29,7 +34,6 @@
 				<div id="page_title">
 					<h2>商品一覧</h2>
 				</div>
-			</div>
 		</div>
 
 		<!-- ユーザー一覧のコンテンツ部分 -->

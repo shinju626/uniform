@@ -16,25 +16,27 @@
 			<!--ヘッダー部分-->
 			<header th:insert="~{/common/header :: frag}"></header>
 
-			<!--メニュー部分-->
+			<!-- メニュー部分 -->
 			<div id="menu">
-				<div class="container">
-					<!--ナビゲーション-->
-					<div id="nav">
-						<ul>
-							<li><a href="/menu">[メニュー]</a></li>
-						</ul>
-					</div>
 
-					<!--ページタイトル-->
-					<div id="page title">
-						<h2>商品変更</h2>
-					</div>
+				<!-- ナビゲーション  -->
+				<div id="nav">
+					<ul>
+						<li><a href="/menu">【メニュー】</a></li>
+					</ul>
 				</div>
+
+				<!-- ページタイトル -->
+				<div id="page_title">
+					<h2>商品情報変更</h2>
+				</div>
+
 			</div>
 
 			<!--商品変更のコンテンツ部分-->
 			<div id="main" class="container">
+				<!--エラーメッセージ-->
+				<p class="error-msg" th:if="${message}!=null" th:text="${message}"></p>
 				<!--入力フォーム-->
 				<form action="/changeItem" method="POST" th:object="${item}">
 					<table class="input-table" align="center">
@@ -49,26 +51,33 @@
 						</tr>
 						<tr>
 							<th>画像</th>
-							<td colspan="2"><img th:src="@{/image/}+${item.itemphoto}" alt="商品画像" class="img-item"></td>>
+							<td colspan="2"><img th:src="@{/image/}+${old_item.itemphoto}" alt="商品画像" class="img-item">
+							</td>
 						</tr>
 						<tr>
 							<th>商品名</th>
 							<td th:text="${old_item.itemname}"></td>
 							<td><input type="text" name="itemname" th:value="*{itemname}" th:errorclass="error-msg">
+								<p th:if="${#fields.hasErrors('itemname')}" th:errors="*{itemname}" class="error-msg">
+								</p>
 							</td>
-							<p th:if="${#fields.hasErrors('itemname')}" th:errors="*{title}" class="error-msg"></p>
+
 						</tr>
 						<tr>
 							<th>価格</th>
-							<td th:text="${old_item.price}"></td>
-							<td><input type="text" name="price" th:errorclass="error-msg"></td>
-							<p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error-msg"></p>
+							<td th:text="'&yen; ' +${#numbers.formatInteger(old_item.price, 3, 'COMMA')}"></td>
+							<td><input type="text" name="price" th:errorclass="error-msg">
+								<p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error-msg"></p>
+							</td>
+
 						</tr>
 						<tr>
 							<th>在庫数</th>
-							<td th:text="${old_item.stock}"></td>
-							<td><input type="text" name="stock" th:errorclass="error-msg"></td>
-							<p th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" class="error-msg"></p>
+							<td th:text="${old_item.stock} + '枚'"></td>
+							<td><input type="text" name="stock" th:errorclass="error-msg">
+								<p th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" class="error-msg"></p>
+							</td>
+
 						</tr>
 					</table>
 

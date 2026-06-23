@@ -19,18 +19,16 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-			<div class="container">
-				<!-- ナビゲーション  -->
-				<div id="nav">
-					<ul>
-						<li><a href="/menu">【メニュー】</a></li>
-					</ul>
-				</div>
+			<!-- ナビゲーション  -->
+			<div id="nav">
+				<ul>
+					<li><a href="/menu">【メニュー】</a></li>
+				</ul>
+			</div>
 
-				<!-- ページタイトル -->
-				<div id="page_title">
-					<h2>商品登録</h2>
-				</div>
+			<!-- ページタイトル -->
+			<div id="page_title">
+				<h2>商品登録</h2>
 			</div>
 		</div>
 
@@ -44,9 +42,7 @@
 					<tr>
 						<th>商品画像</th>
 						<td>
-							<input type="file" name="realimage">
-<!--							<p th:if="${#fields.hasErrors('itemphoto')}" th:errors="*{itemphoto}"-->
-<!--								th:errorclass="error-msg"></p>-->
+							<input type="file" name="realimage" required>
 						</td>
 					</tr>
 					<tr>
@@ -54,21 +50,24 @@
 						<td>
 							<input type="text" name="itemname" th:value="*{itemname}" th:errorclass="error-msg">
 							<p th:if="${#fields.hasErrors('itemname')}" th:errors="*{itemname}"
-								th:errorclass="error-msg"></p>
+								th:errorclass="error-msg">
+							</p>
 						</td>
 					</tr>
 					<tr>
 						<th>価格</th>
 						<td>
 							<input type="text" name="price" th:errorclass="error-msg">
-							<p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" th:errorclass="error-msg"></p>
+							<p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" th:errorclass="error-msg">
+							</p>
 						</td>
 					</tr>
 					<tr>
 						<th>在庫数</th>
 						<td>
 							<input type="text" name="stock" th:errorclass="error-msg">
-							<p th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" th:errorclass="error-msg"></p>
+							<p th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" th:errorclass="error-msg">
+							</p>
 						</td>
 					</tr>
 				</table>

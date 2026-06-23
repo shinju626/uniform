@@ -17,18 +17,16 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-			<div class="container">
-				<!-- ナビゲーション -->
-				<div id="nav">
-					<ul>
-						<li><a href="/login">【ログイン】</a></li>
-					</ul>
-				</div>
+			<!-- ナビゲーション -->
+			<div id="nav">
+				<ul>
+					<li><a href="/login">【ログイン】</a></li>
+				</ul>
+			</div>
 
-				<!-- ページタイトル -->
-				<div id="page_title">
-					<h2>会員登録</h2>
-				</div>
+			<!-- ページタイトル -->
+			<div id="page_title">
+				<h2>会員登録</h2>
 			</div>
 		</div>
 
@@ -42,8 +40,7 @@
 						<th>名前</th>
 						<td>
 							<input type="text" name="name" th:value="*{name}">
-							<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
-								th:errorclass="error-msg">
+							<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:errorclass="error-msg">
 							</p>
 						</td>
 					</tr>

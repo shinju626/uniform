@@ -219,7 +219,7 @@ public class UserController {
 			HttpServletRequest request, ModelAndView mav) {
 
 		// パラメータで取得したユーザーIDを基に各情報を取得する
-		Optional<User> optionalUser = userinfo.findByUserid(request.getParameter("userid"));
+		Optional<User> optionalUser = userinfo.findByUserid(Integer.parseInt(request.getParameter("userid")));
 
 		// エラーチェック
 		if (!(optionalUser.isPresent())) {
@@ -268,7 +268,7 @@ public class UserController {
 		}
 
 		// ユーザーを検索し、エラーがないか確認する
-		Optional<User> optionalUser = userinfo.findByUserid(request.getParameter("userid"));
+		Optional<User> optionalUser = userinfo.findByUserid(Integer.parseInt(request.getParameter("userid")));
 
 		// 対象のユーザーが存在しない場合、エラーメッセージを表示
 
@@ -363,7 +363,7 @@ public class UserController {
 
 	/**
 	 * 「/deleteUser」へアクセスがあった場合
-	 * 対象商品を削除
+	 * 対象ユーザーを削除
 	 * @param request
 	 * @param mav
 	 * @return
@@ -384,7 +384,7 @@ public class UserController {
 		}
 		mav.addObject("user", user); // ユーザーごとの画面の映し分けに必要
 
-		// 書籍の検索
+		// ユーザーの検索
 		Optional<User> optionalUser = userinfo.findById(Integer.parseInt(request.getParameter("userid")));
 
 		// エラーチェック
@@ -418,13 +418,12 @@ public class UserController {
 		//セッションからUserの値を取得する
 		CheckUser checkUser = (CheckUser) session.getAttribute("checkUser");
 
-		//★重要！！！！！！！！！！
 		//userにしかuseridがないから、checkUserにuserのuseridをいれる
 		User user = (User) session.getAttribute("user");
-		mav.addObject("user", user);
 
 		//Viewに渡す変数をModelに格納
 		mav.addObject("checkUser", checkUser);
+		mav.addObject("user", user);
 
 		//画面に出力するViewを指定
 		mav.setViewName("view/changeInfo");
@@ -438,15 +437,15 @@ public class UserController {
 	 * 「/changeInfo」へPOST送信があった場合
 	 * @param mav
 	 * @return 会員情報を修正を表示
-	 * 	 */
+	 */
 
 	@PostMapping(value = "/changeInfo")
-	public ModelAndView changeInfoPost(@ModelAttribute @Validated CheckUser checkuser, BindingResult result,
+	public ModelAndView changeInfoPost(@ModelAttribute @Validated CheckUser checkUser, BindingResult result,
 			ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 
 		//セッションからUserの値を取得する
 		User user = (User) session.getAttribute("user");
-
+		
 		//セッション切れ
 		if (user == null) {
 			mav.addObject("errorMessage", "セッション切れの為、再度ログインしてください。");
@@ -456,81 +455,91 @@ public class UserController {
 			return mav;
 		}
 
+		// ユーザーを検索し、エラーがないか確認する
+		Optional<User> opUser = userinfo.findByUserid(user.getUserid());
+
+		// ユーザーが存在する場合、oldUserとしてModelに追加
+		User oldUser = opUser.get();
+
+
+
 		//バリデーションエラー
 		if (result.hasErrors()) {
 			mav.addObject("errorMessage", "入力内容に誤りがあります。");
 			mav.addObject("user", user);
-			mav.setViewName("view/changeUserinfo");
+			mav.addObject("checkUser", checkUser);
+			mav.setViewName("view/changeInfo");
 			return mav;
 		}
 
 		//旧パスと現在パスのチェック
-		Optional<User> optionalUser = userinfo.findByEmailAndPassword(user.getEmail(), checkuser.getOldPassword());
+		Optional<User> optionalUser = userinfo.findByEmailAndPassword(user.getEmail(), checkUser.getOldPassword());
 
 		if (optionalUser.isEmpty()) {
 			mav.addObject("message", "現在のパスワードが間違っています。");
-			mav.setViewName("view/changeUserinfo");
+			mav.setViewName("view/changeInfo");
 			return mav;
 		}
 
 		// 名前の更新チェック（無ければ前の値をキープ）
-		if (checkuser.getName() != null && !checkuser.getName().isBlank()) {
-			user.setName(checkuser.getName());
+		if (checkUser.getName() != null && !checkUser.getName().isBlank()) {
+			user.setName(checkUser.getName());
 		}
 
 		// メアドの更新チェック（無ければ前の値をキープ）
-		if (checkuser.getEmail() != null && !checkuser.getEmail().isBlank()) {
-			user.setEmail(checkuser.getEmail());
+		if (checkUser.getEmail() != null && !checkUser.getEmail().isBlank()) {
+			user.setEmail(checkUser.getEmail());
 		}
 
 		// 住所の更新チェック（無ければ前の値をキープ）
-		if (checkuser.getAddress() != null && !checkuser.getAddress().isBlank()) {
-			user.setAddress(checkuser.getAddress());
+		if (checkUser.getAddress() != null && !checkUser.getAddress().isBlank()) {
+			user.setAddress(checkUser.getAddress());
 		}
 
 		//新しいパスワードと確認用のパスワードが一致するかを確認
-		if (!checkuser.getPassword().equals(checkuser.getConfirmPassword())) {
+		if (!checkUser.getPassword().equals(checkUser.getConfirmPassword())) {
 			mav.addObject("message", "確認用パスワードが一致しません");
-			mav.setViewName("view/changeUserinfo");
+			mav.addObject("user", user);
+			mav.addObject("checkUser", checkUser);
+			mav.setViewName("view/changeInfo");
 			return mav;
 		}
 
 		//空白じゃない場合のみ登録を行う
-		if (checkuser.getPassword() != null && !checkuser.getPassword().isBlank()) {
+		if (checkUser.getPassword() != null && !checkUser.getPassword().isBlank()) {
 			// // 新パスワードと確認用パスワードの一致チェック
-			if (!checkuser.getPassword().equals(checkuser.getConfirmPassword())) {
+			if (!checkUser.getPassword().equals(checkUser.getConfirmPassword())) {
 				mav.addObject("message", "確認用パスワードが一致しません。");
-				mav.setViewName("view/changeUserinfo");
+				mav.setViewName("view/changeInfo");
 				return mav;
 			}
 			// 一致していれば新しいパスワードをセット
-			user.setPassword(checkuser.getPassword());
+			user.setPassword(checkUser.getPassword());
 		}
 
 		//格納したUserの値に新規パスワードを設定し、DBにも登録する
-		//★重要↓
-		user.setPassword(checkuser.getPassword());
+		user.setPassword(checkUser.getPassword());
 		userinfo.saveAndFlush(user);
 
 		//クッキーを再登録する
 		//Cookieの設定
-		Cookie useridCookie = new Cookie("strUserid", checkuser.getEmail());
+		Cookie useridCookie = new Cookie("strUserid", checkUser.getEmail());
 		useridCookie.setMaxAge(60 * 60 * 24 * 5); //5日間に設定E
 		response.addCookie(useridCookie);
 
-		Cookie passCookie = new Cookie("strPassword", checkuser.getPassword());
+		Cookie passCookie = new Cookie("strPassword", checkUser.getPassword());
 		passCookie.setMaxAge(60 * 60 * 24 * 5);//5日間に設定
 		response.addCookie(passCookie);
 
 		//User、CheckUserをセッションに登録する
 		session.setAttribute("user", user);
-		session.setAttribute("checkUser", checkuser);
+		session.setAttribute("checkUser", checkUser);
 
 		//Viewに渡す変数をModelに格納
 		mav.addObject("message", "会員情報の変更が完了しました！");
 
 		//Viewに渡す変数をModelに格納
-		mav.addObject("checkUser", checkuser);
+		mav.addObject("checkUser", checkUser);
 		mav.addObject("user", user);
 
 		//画面に出力するViewを指定

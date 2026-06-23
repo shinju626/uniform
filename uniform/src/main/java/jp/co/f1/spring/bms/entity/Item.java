@@ -41,7 +41,6 @@ public class Item {
 
 	// 画像名
 	@Column(length = 100)
-	@NotEmpty(message = "挿入する画像を選択してください")
 	private String itemphoto;
 
 	public void setItemphoto(String itemphoto) {

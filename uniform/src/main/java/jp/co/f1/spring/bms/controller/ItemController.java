@@ -1,5 +1,6 @@
 package jp.co.f1.spring.bms.controller;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -54,6 +55,10 @@ public class ItemController {
 
 	/**
 	 * 「/changeItem」へGet送信された場合
+	 * @param item
+	 * @param request
+	 * @param mav
+	 * @return 商品内容変更画面を表示
 	 */
 	@GetMapping(value = "/changeItem")
 	public ModelAndView update(@ModelAttribute Item item, HttpServletRequest request, ModelAndView mav) {
@@ -98,6 +103,11 @@ public class ItemController {
 
 	/**
 	 * 「/changeItem」へpost送信された場合
+	 * @param item
+	 * @param result
+	 * @param request
+	 * @param mav
+	 * @return 商品の内容を更新して商品一覧画面へ遷移
 	 */
 	@PostMapping(value = "/changeItem")
 	public ModelAndView update(@ModelAttribute @Validated Item item, BindingResult result,
@@ -114,10 +124,12 @@ public class ItemController {
 			mav.setViewName("view/error");
 			return mav;
 		}
+
+		// itemidから商品を検索して取得
 		Optional<Item> optionalItem = iteminfo.findByItemid(Integer.parseInt(request.getParameter("itemid")));
 		Item old_item = optionalItem.get(); // Optionalから値を取得
 
-		// 書籍が存在しない場合
+		// 商品が存在しない場合
 		if (!optionalItem.isPresent()) {
 			mav.addObject("errorMessage", "変更対象の商品が存在しないため、商品変更処理は行えませんでした。");
 			mav.addObject("cmd", "list");
@@ -125,16 +137,30 @@ public class ItemController {
 			mav.setViewName("view/error");
 			return mav;
 		}
+
+		//商品名で検索し、名前の重複を確認
+		Optional<Item> itemError = iteminfo.findByItemname(request.getParameter("itemname"));
+
+		// 登録済み商品名の場合
+		if (itemError.isPresent()) {
+			mav.addObject("errorMessage", "入力された商品名は既に登録済みの為、変更処理は行えませんでした。");
+			// 画面に出力するViewを指定
+			mav.setViewName("view/changeItem");
+			// ModelとView情報を返す
+			return mav;
+		}
+
 		// 入力内容にエラーがある場合
 		if (result.hasErrors()) {
 			//エラーメッセージ
 			mav.addObject("message", "入力内容に誤りがあります");
 			// バリデーションエラー後は、入力内容を再表示する
-			mav.addObject("old_book", old_item);
+			mav.addObject("old_item", old_item);
+			//画面に出力するViewを指定
 			mav.setViewName("view/changeItem");
+			//ModelとView情報を返す
 			return mav;
 		}
-		//書籍の検索
 
 		//Viewに渡す変数をModelに格納
 		iteminfo.saveAndFlush(item);
@@ -222,34 +248,38 @@ public class ItemController {
 			} else {
 				mav.addObject("message", "アップロード出来るのはpngまたはjpeg、jpg形式のみです");
 				mav.addObject("user", user);
-				mav.setViewName("view/itemInsert");
+				mav.setViewName("view/insertItem");
 				return mav;
 			}
 		} catch (Exception e) {
 			// エラー時
 			e.printStackTrace();
 		}
-		
+
 		// 登録済み商品名の場合
 		if (optionalItem.isPresent()) {
 			mav.addObject("errorMessage", "入力された商品名は既に登録済みの為、商品登録処理は行えませんでした。");
 
 			// 画面に出力するViewを指定
-			mav.setViewName("view/insert");
+			mav.setViewName("view/insertItem");
 
 			// ModelとView情報を返す
 			return mav;
 		}
-		
+
 		// 空欄時
-		if (!(result.hasErrors())) {
+		if (result.hasErrors()) {
 			mav.addObject("message", "入力内容に空欄があります");
 			mav.addObject("user", user);
-			mav.setViewName("view/itemInsert");
+			mav.setViewName("view/insertItem");
 			return mav;
 
 		}
 
+		// 入力内容をセット
+		item.setItemname(item.getItemname());
+		item.setPrice(item.getPrice());
+		item.setStock(item.getStock());
 
 		//入力されたデータをDBに保存
 		iteminfo.saveAndFlush(item);
@@ -284,7 +314,7 @@ public class ItemController {
 		}
 		mav.addObject("user", user); // ユーザーごとの画面の映し分けに必要
 
-		// 書籍の検索
+		// 商品の検索
 		Optional<Item> optionalItem = iteminfo.findById(Integer.parseInt(request.getParameter("itemid")));
 
 		// エラーチェック
@@ -296,6 +326,12 @@ public class ItemController {
 			return mav;
 		}
 
+		String imageName = optionalItem.get().getItemphoto();
+
+		File file = new File("src/main/resources/static/image/" + imageName);
+
+		file.delete();
+
 		// isbn入力パラメータを取得し、対象の情報を削除
 		iteminfo.deleteById(Integer.parseInt(request.getParameter("itemid")));
 
@@ -306,7 +342,12 @@ public class ItemController {
 		return mav;
 	}
 
-	//商品詳細「/detailItem」にアクセスがあった場合
+	/**
+	 * 「/detailItem」にアクセスがあった場合
+	 * @param request
+	 * @param mav
+	 * @return 商品詳細画面の表示
+	 */
 	@GetMapping("/detailItem")
 	public ModelAndView detail(HttpServletRequest request, ModelAndView mav) {
 
@@ -328,8 +369,8 @@ public class ItemController {
 
 		//セッションからUserの値を取得する
 		User user = (User) session.getAttribute("user");
-		
-		if(user==null) {
+
+		if (user == null) {
 			user = new User();
 			user.setAuthority(3);
 		}
@@ -355,23 +396,15 @@ public class ItemController {
 	@GetMapping("/listItem")
 	public ModelAndView listItem(ModelAndView mav) {
 
-		// bookinfoテーブルから全件取得
-		Iterable<Item> item_list = iteminfo.findAll();
-
 		// セッションからUserの値を取得する
 		User user = (User) session.getAttribute("user");
 
-		// セッションタイムアウト
-//		if (user == null) {
-//			mav.addObject("errorMessage", "セッション切れの為、再度ログインしてください。");
-//			mav.addObject("cmd", "login");
-//			mav.addObject("next", "[ログイン画面へ戻る]");
-//			mav.setViewName("view/error");
-//			return mav;
-//		}
+		// bookinfoテーブルから全件取得
+		Iterable<Item> item_list = iteminfo.findAll();
 
 		//  Viewに渡す変数をModelに格納
 		mav.addObject("item_list", item_list);
+		mav.addObject("user", user);
 
 		// 画面に出力するViewを指定
 		mav.setViewName("view/listItem");
@@ -379,7 +412,6 @@ public class ItemController {
 		// ModelとView情報を返す
 		return mav;
 	}
-
 
 	/**
 	 * エラーが発生した場合

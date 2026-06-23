@@ -17,18 +17,16 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-			<div class="container">
-				<!-- ナビゲーション -->
-				<div id="nav">
-					<ul>
-						<li><a href="/menu">【メニュー】</a></li>
-					</ul>
-				</div>
+			<!-- ナビゲーション -->
+			<div id="nav">
+				<ul>
+					<li><a href="/menu">【メニュー】</a></li>
+				</ul>
+			</div>
 
-				<!-- ページタイトル -->
-				<div id="page_title">
-					<h2>購入画面</h2>
-				</div>
+			<!-- ページタイトル -->
+			<div id="page_title">
+				<h2>購入画面</h2>
 			</div>
 		</div>
 
@@ -40,26 +38,26 @@
 				以下の内容で注文を確定いたしました。<br>
 				メールにて振込先を指定しておりますので、ご確認お願いします。<br>
 				入金の確認ができ次第発送いたします。<br><br>
-				
+
 			</h4>
 
-				<table>
-					<tr>
-						<th>商品名</th>
-						<th>購入数</th>
-						<th>合計金額</th>
-						<th>備考</th>
-					</tr>
-					<tr>
-						<td th:text="${item.itemname}"></td>
-						<td th:text="${order.quantity}"></td>
-						<td th:text="'&yen;' +${#numbers.formatInteger(order.total, 3, 'COMMA')}"></td>
-						<td th:text="${order.description}"></td>
-					</tr>
+			<table>
+				<tr>
+					<th>商品名</th>
+					<th>購入数</th>
+					<th>合計金額</th>
+					<th>備考</th>
+				</tr>
+				<tr>
+					<td th:text="${item.itemname}"></td>
+					<td th:text="${order.quantity}"></td>
+					<td th:text="'&yen;' +${#numbers.formatInteger(order.total, 3, 'COMMA')}"></td>
+					<td th:text="${order.description}"></td>
+				</tr>
 
-				</table>
+			</table>
 
-				<h4>またのご利用をお待ちしております。<br></h4>
+			<h4>またのご利用をお待ちしております。<br></h4>
 
 		</div>
 

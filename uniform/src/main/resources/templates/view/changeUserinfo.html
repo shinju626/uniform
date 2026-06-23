@@ -17,19 +17,17 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-			<div class="container">
-				<!-- ナビゲーション -->
-				<div id="nav">
-					<ul>
-						<li><a href="/menu">[メニュー]</a></li>
-						<li><a href="/listUser">[ユーザー一覧]</a></li>
-					</ul>
-				</div>
+			<!-- ナビゲーション -->
+			<div id="nav">
+				<ul>
+					<li><a href="/menu">[メニュー]</a></li>
+					<li><a href="/listUser">[ユーザー一覧]</a></li>
+				</ul>
+			</div>
 
-				<!-- ページタイトル -->
-				<div id="page_title">
-					<h2>ユーザー情報変更</h2>
-				</div>
+			<!-- ページタイトル -->
+			<div id="page_title">
+				<h2>ユーザー情報変更</h2>
 			</div>
 		</div>
 
@@ -49,7 +47,7 @@
 					<tr>
 						<td style="background-color:#c0c0c0; width:100">名前</td>
 						<td th:text="${oldUser.name}"></td>
-						<td><input type="text" name="name" th:value="*{name}"}></td>
+						<td><input type="text" name="name" th:value="*{name}" }></td>
 					</tr>
 					<tr>
 						<td style="background-color:#c0c0c0; width:100">パスワード</td>
@@ -82,7 +80,8 @@
 						<td style="width:300" th:text="${oldUser.address}"></td>
 						<td>
 							<input type="text" name="address" th:value="*{address}" th:errorclass="error-msg">
-							<p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" th:errorclass="error-msg"></p>
+							<p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" th:errorclass="error-msg">
+							</p>
 						</td>
 					</tr>
 					<tr>

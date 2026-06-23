@@ -35,82 +35,91 @@
 			</div>
 		</div>
 
-		<!-- 書籍一覧のコンテンツ部分 -->
-		<form action="/changeUserinfo" method="POST" th:object="${user}">
+		<!-- 登録情報変更のコンテンツ部分 -->
+		<div id="main" class="container">
+			<form action="/changeInfo" method="POST" th:object="${user}">
+				<!--メッセージ -->
+				<p th:if="${message} != null" th:text="${message}"></p>
+				<!-- エラーメッセージ -->
+				<p class="error-msg" th:if="${errorMessage} != null" th:text="${errorMessage}"></p>
 
-			<!-- エラーメッセージ -->
-			<p class="error-msg" th:if="${message} != null" th:text="${message}"></p>
-			<div id="main" class="container">
+				<table>
+
+					<tr>
+						<th style="width: 200px;">名前</th>
+						<td th:text="${user.name}"></td>
+						<td>
+							<input type="text" name="name">
+							<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:errorclass="error-msg">
+						</td>
+					</tr>
+					<tr>
+						<th>Eメール</th>
+						<td th:text="${user.email}"></td>
+						<td>
+							<input type="text" name="email" th:value="${email}">
+							<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" th:errorclass="error-msg">
+							</p>
+						</td>
+
+					</tr>
+					<tr>
+						<th>住所</th>
+						<td th:text="${user.address}"></td>
+						<td>
+							<input type="text" name="address" th:value="${address}">
+							<p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" th:errorclass="error-msg">
+							</p>
+						</td>
+
+					</tr>
+					<tr>
+						<th>旧パスワード</th>
+						<td></td>
+						<td>
+							<input type="password" name="oldPassword" th:value="${oldPassword}">
+<!--							<p th:if="${#fields.hasErrors('oldPassword')}" th:errors="*{oldPassword}"-->
+<!--								th:errorclass="error-msg">-->
+<!--							</p>-->
+						</td>
+					</tr>
+					<tr>
+						<th>新パスワード</th>
+						<td></td>
+
+						<td>
+							<input type="password" name="password" th:value="${password}">
+							<p class="error-msg" th:if="${passwordError} != null" th:text="${passwordError}"></p>
+						</td>
+
+					</tr>
+					<tr>
+						<th>新パスワード(確認用)</th>
+						<td></td>
+
+						<td>
+							<input type="password" name="confirmPassword" th:value="${confirmPassword}">
+<!--							<p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error-msg">-->
+							</p>
+						</td>
+					</tr>
 
 
-				<!-- パスワード変更 -->
-				<div="main" class="container">
+					<input type="hidden" name="authority" th:value="${user.authority}">
 
-					<table>
-
-						<tr>
-							<th style="width: 200px;">名前</th>
-							<td th:text="${user.name}"></td>
-							<td>
-								<input type="text" name="name">
-							</td>
-						</tr>
-						<tr>
-							<th>Eメール</th>
-							<td th:text="${user.email}"></td>
-							<td>
-								<input type="text" name="email" th:value="${email}">
-							</td>
-
-						</tr>
-						<tr>
-							<th>住所</th>
-							<td th:text="${user.address}"></td>
-							<td>
-								<input type="text" name="address" th:value="${address}">
-							</td>
-
-						</tr>
-						<tr>
-							<th>旧パスワード</th>
-							<td></td>
-							<td>
-								<input type="password" name="oldPassword" th:value="${oldPassword}">
-							</td>
-						</tr>
-						<tr>
-							<th>新パスワード</th>
-							<td></td>
-
-							<td>
-								<input type="password" name="password" th:value="${password}">
-							</td>
-
-						</tr>
-						<tr>
-							<th>新パスワード(確認用)</th>
-							<td></td>
-
-							<td>
-								<input type="password" name="confirmPassword" th:value="${confirmPassword}">
-							</td>
-						</tr>
-
-
-						<input type="hidden" name="authority" th:value="${user.authority}">
-
-					</table>
-					<input type="submit" value="登録">
-			</div>
+				</table>
+				<input type="submit" value="登録">
+			</form>
+		</div>
 	</div>
-	</form>
 
 
-	<!-- フッター部分 -->
-	<div th:insert="~{/common/footer :: frag}"></div>
+
+
 
 </body>
 
-
+<!-- フッター部分 -->
+<div th:insert="~{/common/footer :: frag}"></div>
 
 </html>

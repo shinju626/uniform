@@ -19,18 +19,16 @@
 
 		<!-- メニュー部分 -->
 		<div id="menu">
-			<div class="container">
-				<!-- ナビゲーション  -->
-				<div id="nav">
-					<ul>
-						<li><a href="/menu">[メニュー]</a></li>
-					</ul>
-				</div>
+			<!-- ナビゲーション  -->
+			<div id="nav">
+				<ul>
+					<li><a href="/menu">[メニュー]</a></li>
+				</ul>
+			</div>
 
-				<!-- ページタイトル -->
-				<div id="page_title">
-					<h2>商品詳細</h2>
-				</div>
+			<!-- ページタイトル -->
+			<div id="page_title">
+				<h2>商品詳細</h2>
 			</div>
 		</div>
 
@@ -57,31 +55,33 @@
 				</tr>
 
 			</table>
-			<div th:if="${user.authority==1}">
+			<div th:unless="${item.stock == 0}">
+				<div th:if="${user.authority==1}">
 
-				<form action="/changeItem" method="get" th:object="${item}">
-					<input type="hidden" name="itemid" th:value="${item.itemid}">
-					<input type="submit" value="変更">
-				</form>
-				<form action="/deleteItem" method="get" th:object="${item}">
-					<input type="hidden" name="itemid" th:value="${item.itemid}">
-					<input type="submit" value="削除">
-				</form>
-			</div>
-			<div th:if="${user.authority==2}">
-				<form action="/buyItem" method="get" th:object="${item}">
-					<input type="hidden" name="itemid" th:value="${item.itemid}">
-					購入数<input type="text" name="quantity">枚
-					<input type="submit" value="購入">
-				</form>
-			</div>
+					<form action="/changeItem" method="get" th:object="${item}">
+						<input type="hidden" name="itemid" th:value="${item.itemid}">
+						<input type="submit" value="変更">
+					</form>
+					<form action="/deleteItem" method="get" th:object="${item}">
+						<input type="hidden" name="itemid" th:value="${item.itemid}">
+						<input type="submit" value="削除">
+					</form>
+				</div>
+				<div th:if="${user.authority==2}">
+					<form action="/buyItem" method="get" th:object="${item}">
+						<input type="hidden" name="itemid" th:value="${item.itemid}">
+						購入数<input type="text" name="quantity">枚
+						<input type="submit" value="購入">
+					</form>
+				</div>
 
-			<div th:if="${user.authority==3}">
-				<form action="/buyNormal" method="get" th:object="${item}">
-					<input type="hidden" name="itemid" th:value="${item.itemid}">
-					購入数<input type="text" name="quantity">枚
-					<input type="submit" value="購入">
-				</form>
+				<div th:if="${user.authority==3}">
+					<form action="/buyNormal" method="get" th:object="${item}">
+						<input type="hidden" name="itemid" th:value="${item.itemid}">
+						購入数<input type="text" name="quantity">枚
+						<input type="submit" value="購入">
+					</form>
+				</div>
 			</div>
 			<div th:if="${item.stock == 0}">
 				<a>Sold Out</a>
