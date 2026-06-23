@@ -19,16 +19,16 @@
 			<!--メニュー部分-->
 			<div id="menu">
 				<div class="container">
-					<!--ナビゲーション-->
+					<!-- ナビゲーション  -->
 					<div id="nav">
 						<ul>
-							<li><a href="/menu">[メニュー]</a></li>
+							<li><a href="/menu">【メニュー】</a></li>
 						</ul>
 					</div>
 
-					<!--ページタイトル-->
-					<div id="page title">
-						<h2>商品変更</h2>
+					<!-- ページタイトル -->
+					<div id="page_title">
+						<h2>商品情報変更</h2>
 					</div>
 				</div>
 			</div>
@@ -49,7 +49,7 @@
 						</tr>
 						<tr>
 							<th>画像</th>
-							<td colspan="2"><img th:src="@{/image/}+${item.itemphoto}" alt="商品画像" class="img-item"></td>>
+							<td colspan="2"><img th:src="@{/image/}+${old_item.itemphoto}" alt="商品画像" class="img-item"></td>
 						</tr>
 						<tr>
 							<th>商品名</th>
@@ -60,13 +60,13 @@
 						</tr>
 						<tr>
 							<th>価格</th>
-							<td th:text="${old_item.price}"></td>
+							<td th:text="'&yen; ' +${#numbers.formatInteger(old_item.price, 3, 'COMMA')}"></td>
 							<td><input type="text" name="price" th:errorclass="error-msg"></td>
 							<p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error-msg"></p>
 						</tr>
 						<tr>
 							<th>在庫数</th>
-							<td th:text="${old_item.stock}"></td>
+							<td th:text="${old_item.stock} + '枚'"></td>
 							<td><input type="text" name="stock" th:errorclass="error-msg"></td>
 							<p th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" class="error-msg"></p>
 						</tr>

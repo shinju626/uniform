@@ -1,10 +1,10 @@
-<!--商品一覧画面-->
+<!--注文履歴画面-->
 <!DOCTYPE html>
 <html>
 
 <head>
 	<meta charset="UTF-8">
-	<title>商品一覧</title>
+	<title>注文履歴</title>
 	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
@@ -27,7 +27,7 @@
 
 				<!-- ページタイトル -->
 				<div id="page_title">
-					<h2>商品一覧</h2>
+					<h2>注文履歴</h2>
 				</div>
 			</div>
 		</div>
@@ -39,18 +39,29 @@
 			<table class="itemlist-table" align="center">
 				<thead>
 					<tr>
-						<th style="width:150px">商品名</th>
-						<th style="width:150px">価格</th>
-						<th style="width:150px">在庫数</th>
-						<th style="width:150px">画像</th>
+
+						<th style="width:200px">商品名</th>
+						<th style="width:150px">数量</th>
+						<th style="width:150px">合計金額名</th>
+						<th style="width:150px">注文日</th>
+						<th style="width:150px">入金状況</th>
+						<th style="width:150px">発送状況</th>
 					</tr>
 				</thead>
-				<tbody th:if="${item_list.size() >= 1}">
-					<tr th:each="item : ${item_list}">
-						<td><a th:href="@{/detailItem(itemid=${item.itemid})}" th:text="${item.itemname}"></a></td>
-						<td th:text="'&yen; ' +${#numbers.formatInteger(item.price, 3, 'COMMA')}"></td>
-						<td th:text="${item.stock} + '枚'"></td>
-						<td><img th:src="@{/image/}+${item.itemphoto}" alt="商品画像" class="img-item"></td>
+				<tbody th:if="${order_list.size() >= 1}">
+					<tr th:each="order : ${order_list}">
+						<td th:text="${order.item.itemname}"></td>
+						<td th:text="${order.quantity}"></td>
+						<td th:text="${order.total}"></td>
+						<td th:text="${order.date}"></td>
+						<td>
+							<a th:if="${order.ispaid == 0}">未入金</a>
+							<a th:if="${order.ispaid == 1}">入金済み</a>
+						</td>
+						<td>
+							<a th:if="${order.isshipped == 0}">未発送</a>
+							<a th:if="${order.isshipped == 1}">発送済み</a>
+						</td>
 					</tr>
 				</tbody>
 			</table>

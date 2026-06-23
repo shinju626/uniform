@@ -49,16 +49,15 @@
 				</tr>
 				<tr>
 					<th>価格</th>
-					<td th:text="'&yen; ' +${#numbers.formatInteger(item.price, 3, 'COMMA')}"></td>
+					<td th:text="${item.price}"></td>
 				</tr>
 				<tr>
 					<th>在庫数</th>
-					<td th:text="${item.stock} + '枚'"></td>
+					<td th:text="${item.stock}"></td>
 				</tr>
 
 			</table>
 			<div th:if="${user.authority==1}">
-				
 				<form action="/changeItem" method="get" th:object="${item}">
 					<input type="hidden" name="itemid" th:value="${item.itemid}">
 					<input type="submit" value="変更">

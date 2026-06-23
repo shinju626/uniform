@@ -1,0 +1,81 @@
+<!--メニュー画面(会員・管理者)-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>MENU</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<!-- ブラウザ全体 -->
+	<div>
+
+
+
+		<!--会員メニュー画面-->
+		<tbody th:if="${user.authority == 2}">
+			<!-- ブラウザ全体 -->
+			<div id="nomal">
+
+				<!--ヘッダー部分  -->
+				<header th:insert="~{common/header :: header}"></header>
+				<!-- メニュー部分 -->
+				<div id="menu">
+					<div class="container">
+						<!-- ページタイトル -->
+						<div id="page_title">
+							<h2>●会員メニュー●</h2>
+						</div>
+					</div>
+				</div>
+
+				<!-- menuのコンテンツ部分 -->
+				<div id="main" class="container">
+					<a href="/listItem">[商品一覧]</a><br>
+					<a href="/orderHistory">[注文履歴]</a><br>
+					<a href="/logout">[ログアウト]</a><br>
+					<br>
+					<br>
+					<br>
+				</div>
+
+			</div>
+		</tbody>
+
+		<!--管理者メニュー画面-->
+		<tbody th:if="${user.authority == 1}">
+			<!-- ブラウザ全体 -->
+			<div id="wrap">
+
+				<!--ヘッダー部分  -->
+				<header th:insert="~{common/header :: header}"></header>
+				<!-- メニュー部分 -->
+				<div id="menu">
+					<div class="container">
+						<!-- ページタイトル -->
+						<div id="page_title">
+							<h2>●管理者メニュー●</h2>
+						</div>
+					</div>
+				</div>
+
+				<!-- menuのコンテンツ部分 -->
+				<div id="main" class="container">
+					<a href="/listOrder">[受注状況確認]</a><br>
+					<a href="/listItem">[商品管理]</a><br>
+					<a href="/insertItem">[商品追加]</a><br>
+					<a href="/listUser">[ユーザー一覧]</a><br>
+					<a href="/logout">【ログアウト】</a><br>
+				</div>
+
+
+
+
+			</div>
+		</tbody>
+		<!-- フッター部分 -->
+		<footer th:insert="~{common/footer :: footer}"></footer>
+
+</html>

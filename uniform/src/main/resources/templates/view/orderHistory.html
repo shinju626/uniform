@@ -51,16 +51,17 @@
 				<tbody th:if="${order_list.size() >= 1}">
 					<tr th:each="order : ${order_list}">
 						<td th:text="${order.item.itemname}"></td>
-						<td th:text="${order.quantity}"></td>
-						<td th:text="${order.total}"></td>
-						<td th:text="${order.date}"></td>
+						<td th:text="${order.quantity} + '枚'"></td>
+						<td th:text="'&yen; ' +${#numbers.formatInteger(order.total, 3, 'COMMA')}"></td>
+						<td th:text="*{#dates.format(order.date, 'yyyy/MM/dd')}"></td>
 						<td>
-							<a th:if="${order.ispaid == 0}">未入金</a>
-							<a th:if="${order.ispaid == 1}">入金済み</a>
+							<a th:if="${order.ispaid == 0}">入金待ち</a>
+							<a th:if="${order.ispaid == 2}">入金済</a>
 						</td>
 						<td>
-							<a th:if="${order.isshipped == 0}">未発送</a>
-							<a th:if="${order.isshipped == 1}">発送済み</a>
+							<a th:if="${order.isshipped == 0}">未</a>
+							<a th:if="${order.isshipped == 1}">発送準備中</a>
+							<a th:if="${order.isshipped == 2}">発送済</a>
 						</td>
 					</tr>
 				</tbody>

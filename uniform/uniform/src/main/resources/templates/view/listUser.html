@@ -1,0 +1,78 @@
+<!--ユーザー一覧-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>ユーザー一覧</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+	<!-- ブラウザ全体 -->
+	<div id="wrap">
+
+		<!--ヘッダー部分  -->
+		<header th:insert="~{common/header :: header}"></header>
+
+		<div id="menu">
+			<div class="container">
+				<!-- ナビゲーション  -->
+				<div id="nav">
+					<ul>
+						<li><a href="/menu">【メニュー】</a></li>
+					</ul>
+				</div>
+
+				<!-- ページタイトル -->
+				<div id="page_title">
+					<h2>ユーザー一覧</h2>
+				</div>
+			</div>
+		</div>
+		<!-- 検索フォーム-->
+		<form action="/userList" method="get">
+			<label>キーワード検索：
+				<input type="text" name="keyword">
+			</label>
+			<input type="submit" value="検索">
+		</form>
+
+		<table border="1">
+			<thead>
+				<tr>
+					<th>ユーザーID</th>
+					<th>氏名</th>
+					<th>メールアドレス</th>
+					<th>住所</th>
+					<th>権限</th>
+					<th>変更/削除</th>
+
+				</tr>
+			</thead>
+
+			<tbody>
+				<!-- DBから渡された userList を1件ずつ表示 -->
+				<tr th:each="user : ${user}">
+					<td th:text="${user.userid}"></td>
+					<td th:text="${user.name}"></td>
+					<td th:text="${user.email}"></td>
+					<td th:text="${user.address}"></td>
+					<td th:if="${user.authority==1}">管理者</td>
+					<td th:if="${user.authority==2}">会員</td>
+					<td>
+						<a th:href="@{/detailUser(userid=${user.userid})}">変更</a>
+						<a>/</a>
+						<a th:href="@{/deleteUser(userid=${user.userid})}">削除</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+</body>
+<!-- フッター部分 -->
+<footer th:insert="~{common/footer :: footer}"></footer>
+
+</html>

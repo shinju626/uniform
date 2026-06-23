@@ -1,4 +1,4 @@
-<!--購入画面画面-->
+<!--購入画面-->
 <!DOCTYPE html>
 <html>
 
@@ -36,7 +36,7 @@
 		<div id="main" class="container">
 			<p class="error-msg" th:if="${errorMessage} != null" th:text="${errorMessage}"></p>
 			<p class="error-msg" th:if="${message} != null" th:text="${message}"></p>
-			<form action="/buyItem" method="post" th:object="${user}">
+			<form action="/buyConfirm" th:object="${user}">
 				<table>
 					<tr>
 						<th>商品</th>
@@ -45,36 +45,31 @@
 					<tr>
 						<th>購入数</th>
 						<td th:text="${order.quantity}"></td>
-						<input type="hidden" name="quantity" th:value="order.quantity">
+						<input type="hidden" name="quantity" th:value="${order.quantity}">
 					</tr>
 					<tr>
 						<th>名前</th>
-						<td>
-							<input type="text" name="name">
-						</td>
+						<td th:text="${user.name}"></td>
 					</tr>
 					<tr>
 						<th>メールアドレス</th>
-						<td>
-							<input type="text" name="email" th:value="${user.email}" th:errorclass="error-msg">
-							<p th:if="${#fields.hasErrors('email')}" th:errors="${user.email}" th:errorclass="error-msg"></p>
-						</td>
+						<td th:text="${user.email}"></td>
 					</tr>
 					<tr>
 						<th>住所</th>
-						<td>
-							<input type="text" name="address" th:value="${user.address}" th:errorclass="error-msg">
-							<p th:if="${#fields.hasErrors('address')}" th:errors="${user.address}" th:errorclass="error-msg"></p>
-						</td>
+						<td th:text="${user.address}"></td>
 					</tr>
 					<tr>
 						<th>備考</th>
 						<td>
 							<input type="text" name="description" th:value="${order.description}">
-							<input type="hidden" name="description" th:value="order.description">
+							<input type="hidden" name="description" th:value="${order.description}">
+							<input type="hidden" name="userid" th:value="${user.userid}">
+							<input type="hidden" name="authority" th:value="${user.authority}">
 						</td>
 					</tr>
 				</table>
+				<input type="hidden" name="itemid" th:value="${item.itemid}">
 				<input type="submit" value="購入確定">
 			</form>
 

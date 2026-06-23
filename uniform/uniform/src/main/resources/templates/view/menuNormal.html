@@ -1,0 +1,44 @@
+<!--メニュー画面(非会員)-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>MENU</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<!-- ブラウザ全体 -->
+	<div id="nomal">
+
+		<!-- ヘッダー部分 -->
+		<div th:insert="~{/common/header :: frag}"></div>
+
+		<!--非会員メニュー部分-->
+		<div id="menu">
+			<div class="container">
+				<!-- ページタイトル -->
+				<div id="page_title">
+					<h2>●非会員メニュー●</h2>
+				</div>
+			</div>
+		</div>
+
+		<!-- menuのコンテンツ部分 -->
+		<div id="main" class="container">
+			<a href="/listItem">[商品一覧]</a><br>
+			<a href="/signup">[会員登録]</a><br>
+			<br>
+			<br>
+			<br>
+			
+		</div>
+
+		<!-- フッター部分 -->
+		<footer th:insert="~{common/footer :: footer}"></footer>
+
+	</div>
+</body>
+
+</html>

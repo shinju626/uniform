@@ -1,0 +1,39 @@
+<!--エラー画面-->
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>エラー画面</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+	<!-- ブラウザ全体 -->
+	<div id="wrap">
+
+		<!-- ヘッダー部分 -->
+		<header th:insert="~{common/header :: header}"></header>
+
+		<!-- エラー表示 -->
+		<div id="main" class="container">
+			<br>
+			<h2>●エラー●</h2>
+			<table align="center">
+				<tr>
+					<td th:text="${errorMessage}"></td>
+				</tr>
+				<tr>
+					<td>
+						<a th:href="@{/}+@{${cmd}}" th:text="${next}"></a>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- フッター部分 -->
+		<footer th:insert="~{common/footer :: footer}"></footer>
+	</div>
+</body>
+
+</html>
