@@ -48,9 +48,9 @@
 					<td th:text="${user.name}"></td>
 					<td th:text="${user.email}"></td>
 					<td>
-						<a th:href="@{/changeUserinfo(userid=${user.userid})}">変更</a>
+						<a th:href="@{/changeUserinfo(userid=${user.userid})}" class="buttonmin">変更</a>
 						<a>/</a>
-						<a th:href="@{/deleteUser(userid=${user.userid})}">削除</a>
+						<a th:href="@{/deleteUser(userid=${user.userid})}" class="buttonmin">削除</a>
 					</td>
 				</tr>
 			</tbody>
@@ -77,9 +77,9 @@
 					<td th:text="${user.email}"></td>
 					<td th:text="${user.address}"></td>
 					<td>
-						<a th:href="@{/changeUserinfo(userid=${user.userid})}">変更</a>
+						<a th:href="@{/changeUserinfo(userid=${user.userid})}" class="buttonmin">変更</a>
 						<a>/</a>
-						<a th:href="@{/deleteUser(userid=${user.userid})}">削除</a>
+						<a th:href="@{/deleteUser(userid=${user.userid})}" class="buttonmin">削除</a>
 					</td>
 				</tr>
 			</tbody>

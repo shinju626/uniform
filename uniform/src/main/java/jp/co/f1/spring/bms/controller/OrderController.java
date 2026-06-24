@@ -323,6 +323,18 @@ public class OrderController {
 			Order order_before = ordermonth_before.get(i);
 			beforeTotal += Integer.parseInt(order_before.getTotal());
 		}
+		
+		//全合計
+        int allTotal = 0;
+
+        ArrayList<Order> allOrdersList = (ArrayList<Order>) allOrders;
+
+        //取得した値で小計、合計の計算をする
+        for (int i = 0; i < allOrdersList.size(); i++) {
+            allTotal += Integer.parseInt(allOrdersList.get(i).getTotal());
+
+        }
+        mav.addObject("allTotal", allTotal);
 
 		mav.addObject("nowTotal", nowTotal);
 		mav.addObject("beforeTotal", beforeTotal);

@@ -28,7 +28,7 @@ public class Order {
 	public int getOrderid() {
 		return orderid;
 	}
-	
+
 	// 購入日時
 	private Date date;
 
@@ -39,7 +39,7 @@ public class Order {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
+
 	// 入金情報判定
 	@Column(length = 1)
 	private String ispaid;
@@ -63,7 +63,7 @@ public class Order {
 	public String getIsshipped() {
 		return isshipped;
 	}
-	
+
 	// 備考
 	@Column(length = 200)
 	private String description;
@@ -75,7 +75,7 @@ public class Order {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	//ユーザーID
 	@Column(length = 11)
 	private int userid;
@@ -87,7 +87,7 @@ public class Order {
 	public int getUserid() {
 		return userid;
 	}
-	
+
 	// 商品ID
 	@Column(length = 11)
 	private int itemid;
@@ -99,7 +99,7 @@ public class Order {
 	public int getItemid() {
 		return itemid;
 	}
-	
+
 	// 数量
 	@Column(length = 11)
 	@NotNull(message = "数量を入力してください")
@@ -112,7 +112,7 @@ public class Order {
 	public String getQuantity() {
 		return quantity;
 	}
-	
+
 	// 合計金額
 	@Column(length = 11)
 	private String total;
@@ -123,6 +123,18 @@ public class Order {
 
 	public String getTotal() {
 		return total;
+	}
+
+	// カートID
+	@Column(length = 11)
+	private String cartid;
+
+	public void setCartid(String cartid) {
+		this.cartid = cartid;
+	}
+
+	public String getCartid() {
+		return cartid;
 	}
 
 	// Itemオブジェクト
@@ -150,5 +162,5 @@ public class Order {
 	public User getUser() {
 		return user;
 	}
-	
+
 }

@@ -32,12 +32,28 @@
 
 
 		<!-- 売上情報（今月・先月） -->
-		<p align="right">
-			今月の売り上げ（発送完了分）：<span th:text="'&yen; ' +${#numbers.formatInteger(nowTotal2, 3, 'COMMA')}"></span>
-			　　今月の売り上げ（予定分）：<span th:text="'&yen; ' +${#numbers.formatInteger(nowTotal, 3, 'COMMA')}"></span><br>
-			先月の売り上げ（発送完了分）：<span th:text="'&yen; ' +${#numbers.formatInteger(beforeTotal2, 3, 'COMMA')}"></span>
-			　　先月の売り上げ（予定分）：<span th:text="'&yen; ' +${#numbers.formatInteger(beforeTotal, 3, 'COMMA')}"></span>
-		</p>
+		<h3 align="center">売上情報</h3>
+				<table align="center">
+			<tr>
+				<td>今月の売り上げ（発送完了分）：</td>
+				<td><span th:text="'&yen; ' +${#numbers.formatInteger(nowTotal2, 3, 'COMMA')}"></span></td>
+				<td>今月の売り上げ（予定分）：</td>
+				<td><span th:text="'&yen; ' +${#numbers.formatInteger(nowTotal, 3, 'COMMA')}"></span></td>
+			</tr>
+			<tr>
+				<td>先月の売り上げ（発送完了分）：</td>
+				<td><span th:text="'&yen; ' +${#numbers.formatInteger(beforeTotal2, 3, 'COMMA')}"></span></td>
+				<td>先月の売り上げ（予定分）：</td>
+				<td><span th:text="'&yen; ' +${#numbers.formatInteger(beforeTotal, 3, 'COMMA')}"></span></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td>全売り上げ（予定分）：</td>
+				<td><span th:text="'&yen; ' +${#numbers.formatInteger(allTotal, 3, 'COMMA')}"></span></td>
+			</tr>
+		</table>
+		<br>
 
 		<!-- 受注状況一覧テーブル -->
 		<h3 align="center">受注状況一覧</h3>
@@ -75,7 +91,7 @@
 					</td>
 
 					<td>
-						<a th:href="@{/detailOrder(orderid=${order.orderid})}" class="buttonmin">詳細</a> 
+						<a th:href="@{/detailOrder(orderid=${order.orderid})}" class="buttonmin">詳細</a>
 						<a th:href="@{/updateOrder(orderid=${order.orderid})}" class="buttonmin">更新</a>
 					</td>
 					<td>
