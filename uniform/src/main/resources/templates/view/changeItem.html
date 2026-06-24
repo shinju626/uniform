@@ -13,15 +13,16 @@
 		<!--ブラウザ全体-->
 		<div id="wrap">
 
-			<!--ヘッダー部分-->
-			<header th:insert="~{/common/header :: frag}"></header>
+
+			<!-- ヘッダー部分 -->
+			<header th:insert="~{common/header :: header}"></header>
 
 			<!-- メニュー部分 -->
 			<div id="menu">
 
 				<!-- ナビゲーション  -->
 				<div id="nav">
-					<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
+					<a href="/menu" class="button">MENU</a>
 				</div>
 
 				<!-- ページタイトル -->
@@ -81,14 +82,14 @@
 
 					<!--変更完了ボタン-->
 					<input type="hidden" name="itemid" th:value="${old_item.itemid}">
-					<input type="submit" value="変更完了">
+					<input type="submit" value="変更する" class="button">
 				</form>
 			</div>
-			<!--フッター部分-->
-			<footer th:insert="~{ /common/footer :: frag}"></footer>
-
 		</div>
 	</div>
 </body>
+<!-- フッター部分 -->
+<footer th:insert="~{common/footer :: footer}"></footer>
+
 
 </html>

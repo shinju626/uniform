@@ -19,8 +19,8 @@
 		<div id="menu">
 			<!-- ナビゲーション  -->
 			<div id="nav">
-				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
-				<a class="btn" href="/listOrder"><span>受注状況一覧</span><span>GO</span></a>
+				<a href="/menu" class="button">MENU</a>
+				<a href="/listOrder" class="button">受注状況一覧</a>
 			</div>
 
 			<!-- ページタイトル -->
@@ -61,20 +61,20 @@
 				</tr>
 				<tr>
 					<th>入金状況</th>
-					<td th:if="${order.ispaid==0}">入金待ち</td>
-					<td th:if="${order.ispaid==2}">入金済</td>
+					<td th:if="${order.ispaid.equals('0')}">入金待ち</td>
+					<td th:if="${order.ispaid.equals('2')}">入金済</td>
 				</tr>
 				<tr>
 					<th>発送状況</th>
-					<td th:if="${order.isshipped==0}">未</td>
-					<td th:if="${order.isshipped==1}">発送準備中</td>
-					<td th:if="${order.isshipped==2}">発送済</td>
+					<td th:if="${order.isshipped.equals('0')}">未</td>
+					<td th:if="${order.isshipped.equals('1')}">発送準備中</td>
+					<td th:if="${order.isshipped.equals('2')}">発送済</td>
 				</tr>
 			</table>
 
 			<form action="/updateOrder" method="GET" th:object="${order}">
 				<input type="hidden" th:value="${order.orderid}" name="orderid">
-				<input type="submit" value="状況更新">
+				<input type="submit" value="状況の更新" class="button">
 			</form>
 		</div>
 </body>

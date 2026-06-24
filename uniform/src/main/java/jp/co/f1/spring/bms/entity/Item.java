@@ -54,26 +54,26 @@ public class Item {
 	// 在庫数
 	@Column(length = 11)
 	@NotNull(message = "数量を入力してください")
-	private int stock;
+	private String stock;
 
-	public void setStock(int stock) {
+	public void setStock(String stock) {
 		this.stock = stock;
 	}
 
-	public int getStock() {
+	public String getStock() {
 		return stock;
 	}
 
 	// 価格
 	@Column(length = 11)
 	@NotNull(message = "価格を入力してください")
-	private int price;
+	private String price;
 	
-	public void setPrice(int price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 	
-	public int getPrice() {
+	public String getPrice() {
 		return price;
 	}
 

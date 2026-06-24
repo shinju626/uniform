@@ -11,8 +11,9 @@
 	<!-- ブラウザ全体 -->
 	<div id="wrap">
 
+
 		<!-- ヘッダー部分 -->
-		<div th:insert="~{/common/header :: frag}"></div>
+		<header th:insert="~{common/header :: header}"></header>
 
 		<!-- メニュー部分 -->
 		<div id="menu">
@@ -48,23 +49,28 @@
 
 				<!-- ログインボタン -->
 				<div style="text-align:center; margin-top:20px;">
-					<input type="submit" value="ログイン">
+					<input type="submit" value="ログインする" class="button">
 				</div>
 			</form>
+			
+			<br>
+			<br>
+			<br>
 
-			<!-- 非会員の方はこちら -->
-			<div style="text-align:center; margin-top:25px;">
-				<form action="/menuNormal" method="GET">
-					<input type="submit" value="非会員の方はこちら">
-				</form>
-			</div>
 
 			<!-- 会員登録の方はこちら -->
 			<div style="text-align:center; margin-top:15px;">
 				<form action="/signup" method="GET">
-					<input type="submit" value="会員登録の方はこちら">
+					<input type="submit" value="会員登録" class="button">
 				</form>
 			</div>
+
+			<!-- 非会員の方はこちら -->
+			<div style="text-align:center; margin-top:25px;">
+				<form action="/menuNormal" method="GET">
+					<input type="submit" value="登録せずに続ける" class="button">
+			</div>
+
 
 		</div>
 

@@ -19,8 +19,8 @@
 		<div id="menu">
 			<!-- ナビゲーション  -->
 			<div id="nav">
-				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
-				<a class="btn" href="/listUser"><span>ユーザー一覧</span><span>GO</span></a>
+				<a href="/menu" class="button">MENU</a>
+				<a href="/listUser" class="button">ユーザー一覧</a>
 			</div>
 
 			<!-- ページタイトル -->
@@ -84,8 +84,8 @@
 					</tr>
 					<tr>
 						<th style="width:100">権限</th>
-						<td th:if="${oldUser.authority==1}">管理者</td>
-						<td th:if="${oldUser.authority==2}">会員</td>
+						<td th:if="${oldUser.authority.equals('1')}">管理者</td>
+						<td th:if="${oldUser.authority.equals('2')}">会員</td>
 						<td>
 							<select name="authority" th:errorclass="error-msg">
 								<option value=""></option>
@@ -100,7 +100,7 @@
 				</table>
 				<input type="hidden" name="userid" th:value="${oldUser.userid}">
 				<input type="hidden" name="oldPassword" th:value="a">
-				<input type="submit" value="更新完了">
+				<input type="submit" value="変更する" class="button">
 			</form>
 		</div>
 

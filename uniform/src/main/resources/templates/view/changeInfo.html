@@ -13,8 +13,9 @@
 	<!-- ブラウザ全体 -->
 	<div id="nomal">
 
+
 		<!-- ヘッダー部分 -->
-		<div th:insert="~{/common/header :: frag}"></div>
+		<header th:insert="~{common/header :: header}"></header>
 
 
 
@@ -23,7 +24,7 @@
 
 			<!-- ナビゲーション  -->
 			<div id="nav">
-				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
+				<a href="/menu" class="button">MENU</a>
 			</div>
 			<!-- ページタイトル -->
 			<div id="page_title">
@@ -104,7 +105,7 @@
 					<input type="hidden" name="authority" th:value="${user.authority}">
 
 				</table>
-				<input type="submit" value="登録">
+				<input type="submit" value="変更する" class="button">
 			</form>
 		</div>
 	</div>

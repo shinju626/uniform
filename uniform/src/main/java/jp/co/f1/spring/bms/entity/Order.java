@@ -42,25 +42,25 @@ public class Order {
 	
 	// 入金情報判定
 	@Column(length = 1)
-	private int ispaid;
+	private String ispaid;
 
-	public void setIspaid(int ispaid) {
+	public void setIspaid(String ispaid) {
 		this.ispaid = ispaid;
 	}
 
-	public int getIspaid() {
+	public String getIspaid() {
 		return ispaid;
 	}
 
 	// 発送状況判定
 	@Column(length = 1)
-	private int isshipped;
+	private String isshipped;
 
-	public void setIsshipped(int isshipped) {
+	public void setIsshipped(String isshipped) {
 		this.isshipped = isshipped;
 	}
 
-	public int getIsshipped() {
+	public String getIsshipped() {
 		return isshipped;
 	}
 	
@@ -103,25 +103,25 @@ public class Order {
 	// 数量
 	@Column(length = 11)
 	@NotNull(message = "数量を入力してください")
-	private int quantity;
+	private String quantity;
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(String quantity) {
 		this.quantity = quantity;
 	}
 
-	public int getQuantity() {
+	public String getQuantity() {
 		return quantity;
 	}
 	
 	// 合計金額
 	@Column(length = 11)
-	private int total;
+	private String total;
 
-	public void setTotal(int total) {
+	public void setTotal(String total) {
 		this.total = total;
 	}
 
-	public int getTotal() {
+	public String getTotal() {
 		return total;
 	}
 

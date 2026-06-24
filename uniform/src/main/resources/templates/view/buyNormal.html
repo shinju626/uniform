@@ -19,7 +19,7 @@
 		<div id="menu">
 			<!-- ナビゲーション  -->
 			<div id="nav">
-				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
+				<a href="/menu" class="button">MENU</a>
 			</div>
 
 			<!-- ページタイトル -->
@@ -75,14 +75,14 @@
 				</table>
 				<input type="hidden" name="itemid" th:value="${item.itemid}">
 				<input type="hidden" name="authority" th:value="3">
-				<input type="submit" value="購入確定">
+				<input type="submit" value="購入する" class="button">
 			</form>
 
 		</div>
 
-		<!-- フッター部分 -->
-		<footer th:insert="~{common/footer :: footer}"></footer>
+
 	</div>
 </body>
-
+<!-- フッター部分 -->
+<footer th:insert="~{common/footer :: footer}"></footer>
 </html>

@@ -23,7 +23,7 @@ public class User {
 	public int getUserid() {
 		return userid;
 	}
-	
+
 	// 名前
 	@Column(length = 20)
 	private String name;
@@ -35,7 +35,7 @@ public class User {
 	public String getName() {
 		return name;
 	}
-	
+
 	// パスワード
 	@Column(length = 20)
 	private String password;
@@ -74,13 +74,13 @@ public class User {
 
 	// 権限
 	@Column(length = 1)
-	private int authority;
+	private String authority;
 
-	public void setAuthority(int authority) {
+	public void setAuthority(String authority) {
 		this.authority = authority;
 	}
 
-	public int getAuthority() {
+	public String getAuthority() {
 		return authority;
 	}
 

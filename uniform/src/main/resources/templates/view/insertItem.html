@@ -14,14 +14,14 @@
 	<div id="wrap">
 
 		<!--ヘッダー部分-->
-		<header th:insert="~{/common/header :: frag}"></header>
+		<header th:insert="~{/common/header :: header}"></header>
 
 
 		<!-- メニュー部分 -->
 		<div id="menu">
 			<!-- ナビゲーション  -->
 			<div id="nav">
-				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
+				<a href="/menu" class="button">MENU</a>
 			</div>
 
 			<!-- ページタイトル -->
@@ -69,14 +69,15 @@
 						</td>
 					</tr>
 				</table>
-				<input type="submit" value="登録">
+				<input type="submit" value="登録する" class="button">
 			</form>
 		</div>
 
-		<!--フッター部分-->
-		<footer th:insert="~{ /common/footer :: frag}"></footer>
+
 
 	</div>
 </body>
+<!-- フッター部分 -->
+<footer th:insert="~{common/footer :: footer}"></footer>
 
 </html>

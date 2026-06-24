@@ -18,15 +18,15 @@
 		<!-- メニュー部分 -->
 		<div id="menu">
 				<!-- ナビゲーション -->
-				<div id="nav" th:if="${user.authority==1} or ${user.authority==2}">
+				<div id="nav" th:if="${user.authority.equals('1')} or ${user.authority.equals('2')}">
 					<ul>
-						<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
+						<a href="/menu" class="button">MENU</a>
 					</ul>
 				</div>
 
-				<div id="nav" th:if="${user.authority==3}">
+				<div id="nav" th:if="${user.authority.equals('3')}">
 					<ul>
-						<a class="btn" href="/menuNormal"><span>MENU</span><span>GO</span></a>
+						<a href="/menuNormal" class="button">MENU</a>
 					</ul>
 				</div>
 

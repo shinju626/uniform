@@ -20,7 +20,7 @@
 			<!-- ナビゲーション  -->
 			<!-- ナビゲーション  -->
 			<div id="nav">
-				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
+				<a href="/menu" class="button">MENU</a>
 			</div>
 
 			<!-- ページタイトル -->
@@ -61,8 +61,8 @@
 					</tr>
 					<tr>
 						<th>入金状況</th>
-						<td th:if="${order.ispaid==0}">入金待ち</td>
-						<td th:if="${order.ispaid==2}">入金済</td>
+						<td th:if="${order.ispaid.equals('0')}">入金待ち</td>
+						<td th:if="${order.ispaid.equals('2')}">入金済</td>
 						<td>
 							入金状況
 							<select name="ispaid" th:errorclass="error-msg">
@@ -74,9 +74,9 @@
 					</tr>
 					<tr>
 						<th>発送状況</th>
-						<td th:if="${order.isshipped==0}">未</td>
-						<td th:if="${order.isshipped==1}">発送準備中</td>
-						<td th:if="${order.isshipped==2}">発送済</td>
+						<td th:if="${order.isshipped.equals(0')}">未</td>
+						<td th:if="${order.isshipped.equals('1')}">発送準備中</td>
+						<td th:if="${order.isshipped.equals('2')}">発送済</td>
 						<td>
 							発送状況
 							<select name="isshipped" th:errorclass="error-msg">
@@ -88,8 +88,7 @@
 						</td>
 					</tr>
 				</table>
-				<input type="hidden" th:value="${order.orderid}" name="orderid">
-				<input type="submit" value="更新">
+				<input type="hidden" th:value="更新する" class="button">
 			</form>
 		</div>
 </body>

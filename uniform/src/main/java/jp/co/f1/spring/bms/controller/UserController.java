@@ -616,7 +616,7 @@ public class UserController {
 		newUser.setEmail(checkUser.getEmail());
 		newUser.setName(checkUser.getName());
 		newUser.setAddress(checkUser.getAddress());
-		newUser.setAuthority(2);
+		newUser.setAuthority("2");
 		userinfo.saveAndFlush(newUser);
 
 		// Viewに渡す変数をModelに格納

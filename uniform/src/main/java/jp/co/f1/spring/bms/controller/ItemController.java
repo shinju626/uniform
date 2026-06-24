@@ -375,7 +375,7 @@ public class ItemController {
 
 		if (user == null) {
 			user = new User();
-			user.setAuthority(3);
+			user.setAuthority("3");
 		}
 
 		//getメソッドを用いてModelに格納
@@ -405,7 +405,7 @@ public class ItemController {
 		// 非会員の場合、メニュー画面のリンクが変わるので必要
 		if (user == null) {
 			User userNormal = new User();
-			userNormal.setAuthority(3);
+			userNormal.setAuthority("3");
 			//  Viewに渡す変数をModelに格納
 			mav.addObject("user", userNormal);
 		} else {

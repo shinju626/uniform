@@ -246,8 +246,8 @@ public class OrderController {
 
 		// 入金状況、発送状況を更新
 		Order order = optionalOrder.get();
-		order.setIspaid(Integer.parseInt(request.getParameter("ispaid")));
-		order.setIsshipped(Integer.parseInt(request.getParameter("isshipped")));
+		order.setIspaid(request.getParameter("ispaid"));
+		order.setIsshipped(request.getParameter("isshipped"));
 		orderinfo.saveAndFlush(order);
 
 		// 出品中の商品一覧にリダイレクト
@@ -288,14 +288,14 @@ public class OrderController {
 		for (int i = 0; i < ordermonth_now2.size(); i++) {
 			//※ここでOrderの情報を取り出し、金額を取り出せるようにしておく
 			Order order_now2 = ordermonth_now2.get(i);
-			nowTotal2 += order_now2.getTotal();
+			nowTotal2 += Integer.parseInt(order_now2.getTotal());
 		}
 
 		//取得した合計の計算をする
 		for (int i = 0; i < ordermonth_before2.size(); i++) {
 			//※ここでOrderの情報を取り出し、金額を取り出せるようにしておく
 			Order order_before2 = ordermonth_before2.get(i);
-			beforeTotal2 += order_before2.getTotal();
+			beforeTotal2 += Integer.parseInt(order_before2.getTotal());
 		}
 
 		mav.addObject("nowTotal2", nowTotal2);
@@ -314,14 +314,14 @@ public class OrderController {
 		for (int i = 0; i < ordermonth_now.size(); i++) {
 			//※ここでOrderの情報を取り出し、金額を取り出せるようにしておく
 			Order order_now = ordermonth_now.get(i);
-			nowTotal += order_now.getTotal();
+			nowTotal += Integer.parseInt(order_now.getTotal());
 		}
 
 		//取得した合計の計算をする
 		for (int i = 0; i < ordermonth_before.size(); i++) {
 			//※ここでOrderの情報を取り出し、金額を取り出せるようにしておく
 			Order order_before = ordermonth_before.get(i);
-			beforeTotal += order_before.getTotal();
+			beforeTotal += Integer.parseInt(order_before.getTotal());
 		}
 
 		mav.addObject("nowTotal", nowTotal);
@@ -394,7 +394,7 @@ public class OrderController {
 		Item item = optionalItem.get();
 
 		//在庫数を超えるため購入
-		if (Integer.parseInt(request.getParameter("quantity")) > item.getStock()) {
+		if (Integer.parseInt(request.getParameter("quantity")) > Integer.parseInt(item.getStock())) {
 			//エラーメッセージ
 			mav.addObject("errorMessage", "在庫数を超えるため購入できません。");
 			mav.addObject("cmd", "listItem");
@@ -407,7 +407,7 @@ public class OrderController {
 		}
 
 		Order order = new Order();
-		order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
+		order.setQuantity(request.getParameter("quantity"));
 		mav.addObject("order", order);
 
 		//一覧画面のリンクをクリック時、表示対象の商品が存在しない
@@ -447,7 +447,7 @@ public class OrderController {
 		Item item = optionalItem.get();
 
 		//在庫数を超えるため購入
-		if (Integer.parseInt(request.getParameter("quantity")) > item.getStock()) {
+		if (Integer.parseInt(request.getParameter("quantity")) > Integer.parseInt(item.getStock())) {
 			//エラーメッセージ
 			mav.addObject("errorMessage", "在庫数を超えるため購入できません。");
 			mav.addObject("cmd", "itemList");
@@ -460,7 +460,7 @@ public class OrderController {
 		}
 
 		Order order = new Order();
-		order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
+		order.setQuantity(request.getParameter("quantity"));
 		mav.addObject("order", order);
 
 		//一覧画面のリンクをクリック時、表示対象の商品が存在しない
@@ -479,7 +479,7 @@ public class OrderController {
 		//Viewに渡す変数をModelに格納
 		mav.addObject("item", item);
 		User user = new User();
-		user.setAuthority(3);
+		user.setAuthority("3");
 		mav.addObject("user", user);
 
 		//画面に出力するViewを指定
@@ -507,7 +507,8 @@ public class OrderController {
 		Item item = optionalItem.get();
 
 		// 購入した分を在庫から減らす
-		item.setStock(item.getStock() - Integer.parseInt(request.getParameter("quantity")));
+		item.setStock(
+				String.valueOf(Integer.parseInt(item.getStock()) - Integer.parseInt(request.getParameter("quantity"))));
 		iteminfo.saveAndFlush(item);
 
 		if (request.getParameter("authority").equals("3")) { // 非会員の場合
@@ -517,7 +518,7 @@ public class OrderController {
 			user.setEmail(request.getParameter("email"));
 			user.setName(request.getParameter("name"));
 			user.setAddress(request.getParameter("address"));
-			user.setAuthority(3);
+			user.setAuthority("3");
 			userinfo.saveAndFlush(user);
 
 		} else { // 会員の場合
@@ -540,15 +541,15 @@ public class OrderController {
 
 		// orderに登録
 		Date date = new Date();
-		order.setQuantity(Integer.parseInt(request.getParameter("quantity")));
+		order.setQuantity(request.getParameter("quantity"));
 		order.setUserid(user.getUserid());
 		order.setItemid(Integer.parseInt(request.getParameter("itemid")));
 		order.setDescription(request.getParameter("description"));
-		order.setIspaid(0);
-		order.setIsshipped(0);
+		order.setIspaid("0");
+		order.setIsshipped("0");
 		order.setDate(date);
-		int total = Integer.parseInt(request.getParameter("quantity")) * item.getPrice();
-		order.setTotal(total);
+		int total = Integer.parseInt(request.getParameter("quantity")) * Integer.parseInt(item.getPrice());
+		order.setTotal(String.valueOf(total));
 		orderinfo.saveAndFlush(order);
 
 		String insertMessage = user.getName() + "様" + "\n" + "\n" + "ユニフォームのご購入ありがとうございます。" + "\n"

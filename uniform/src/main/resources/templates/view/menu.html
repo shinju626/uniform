@@ -11,16 +11,16 @@
 <body>
 	<!-- ブラウザ全体 -->
 	<div>
-
+		<!--ヘッダー部分  -->
+		<header th:insert="~{common/header :: header}"></header>
 
 
 		<!--会員メニュー画面-->
-		<tbody th:if="${user.authority == 2}">
+		<tbody th:if="${user.authority.equals('2')}">
 			<!-- ブラウザ全体 -->
 			<div id="nomal">
 
-				<!--ヘッダー部分  -->
-				<header th:insert="~{common/header :: header}"></header>
+
 				<!-- メニュー部分 -->
 				<div id="menu">
 					<!-- ページタイトル -->
@@ -44,12 +44,10 @@
 		</tbody>
 
 		<!--管理者メニュー画面-->
-		<tbody th:if="${user.authority == 1}">
+		<tbody th:if="${user.authority.equals('2')}">
 			<!-- ブラウザ全体 -->
 			<div id="wrap">
 
-				<!--ヘッダー部分  -->
-				<header th:insert="~{common/header :: header}"></header>
 				<!-- メニュー部分 -->
 				<div id="menu">
 					<div class="container">

@@ -19,7 +19,7 @@
 		<div id="menu">
 			<!-- ナビゲーション  -->
 			<div id="nav">
-				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
+				<a href="/menu" class="button">MENU</a>
 			</div>
 
 			<!-- ページタイトル -->
@@ -43,7 +43,7 @@
 
 			<tbody>
 				<!-- DBから渡された userList を1件ずつ表示 -->
-				<tr th:each="user : ${user}" th:if="${user.authority==1}">
+				<tr th:each="user : ${user}" th:if="${user.authority.equals('1')}">
 					<td th:text="${user.userid}"></td>
 					<td th:text="${user.name}"></td>
 					<td th:text="${user.email}"></td>
@@ -71,7 +71,7 @@
 
 			<tbody>
 				<!-- DBから渡された userList を1件ずつ表示 -->
-				<tr th:each="user : ${user}" th:if="${user.authority==2}">
+				<tr th:each="user : ${user}" th:if="${user.authority.equals('2')}">
 					<td th:text="${user.userid}"></td>
 					<td th:text="${user.name}"></td>
 					<td th:text="${user.email}"></td>

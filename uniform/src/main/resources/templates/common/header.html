@@ -1,18 +1,15 @@
-<!DOCTYPE html>
-<html>
-
 <head>
 	<meta charset="UTF-8">
 	<title>ヘッダー</title>
 </head>
 
 <body>
-	<header th:fragment="frag">
-		<h1><img th:src="@{/image/icon.png}" alt="ゆにまる" class="detail-item" style="display: center;"></h1>
-	</header>
+	<div th:fragment="header" class="container">
+		<h1><img th:src="@{/image/icon.png}" alt="ゆにまる" class="detail-item" style="display: left;">
+			<img th:src="@{/image/mozi.png}" alt="ゆにまる" class="detail-mozi" style="display: center;">
+		</h1>
+	</div>
 </body>
-
-</html>
 
 <!--挿入文-->
 <!--<footer th:insert="~{ /common/footer :: frag}"></footer>-->

@@ -14,15 +14,16 @@
 	<!-- ブラウザ全体 -->
 	<div id="nomal">
 
-		<!--ヘッダー部分  -->
-		<div th:insert="~{/common/header :: frag}"></div>
+
+		<!-- ヘッダー部分 -->
+		<header th:insert="~{common/header :: header}"></header>
 
 		<!-- メニュー部分 -->
 		<div id="menu">
 			<!-- ナビゲーション  -->
 			<div id="nav">
-				<a class="btn" href="/menu"><span>MENU</span><span>GO</span></a>
-				<a class="btn" href="/listItem"><span>商品一覧</span><span>GO</span></a>
+				<a href="/menu" class="button">MENU</a>
+				<a href="/listItem" class="button">商品一覧</a>
 			</div>
 
 			<!-- ページタイトル -->
@@ -55,41 +56,41 @@
 
 			</table>
 			<table>
-				<div th:if="${user.authority==1}">
+				<div th:if="${user.authority.equals('1')}">
 					<tr>
 						<td>
 							<form action="/changeItem" method="get" th:object="${item}">
 								<input type="hidden" name="itemid" th:value="${item.itemid}">
-								<input type="submit" value="変更">
+								<input type="submit" value="変更する" class="button">
 							</form>
 						</td>
 						<td>
 							<form action="/deleteItem" method="get" th:object="${item}">
 								<input type="hidden" name="itemid" th:value="${item.itemid}">
-								<input type="submit" value="削除">
+								<input type="submit" value="削除する" class="button">
 							</form>
 						</td>
 					</tr>
 				</div>
 			</table>
-			<div th:unless="${item.stock == 0}">
-				<div th:if="${user.authority==2}">
+			<div th:unless="${item.stock.equals('0')}">
+				<div th:if="${user.authority.equals('2')}">
 					<form action="/buyItem" method="get" th:object="${item}">
 						<input type="hidden" name="itemid" th:value="${item.itemid}">
 						購入数<input type="text" name="quantity">枚
-						<input type="submit" value="購入">
+						<input type="submit" value="購入する" class="button">
 					</form>
 				</div>
 
-				<div th:if="${user.authority==3}">
+				<div th:if="${user.authority.equals('3')}">
 					<form action="/buyNormal" method="get" th:object="${item}">
 						<input type="hidden" name="itemid" th:value="${item.itemid}">
 						購入数<input type="text" name="quantity">枚
-						<input type="submit" value="購入">
+						<input type="submit" value="購入する" class="button">
 					</form>
 				</div>
 			</div>
-			<div th:if="${item.stock == 0}">
+			<div th:if="${item.stock.equals('0')}">
 				<a>Sold Out</a>
 			</div>
 		</div>

@@ -90,13 +90,13 @@ public class CheckUser {
 	// 権限
 	@Column(length = 11)
 	@NotNull(message = "権限を選択してください。")
-	private int authority;
+	private String authority;
 
-	public void setAuthority(int authority) {
+	public void setAuthority(String authority) {
 		this.authority = authority;
 	}
 
-	public int getAuthority() {
+	public String getAuthority() {
 		return authority;
 	}
 }
